@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="UTF-8" />
+	<!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+	<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
+	<meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
+	<link rel="stylesheet" href="styles.css">
+	<title>TobyLearn</title>
+</head>
+
+<body>
+	<div id="start">
+		<h1 id="title">Toby<span>L</span>earn</h1>
+		<a href="#choose-set">Kies een set</a>
+	</div>
+	<div id="choose-set">
+		<div class="grid">
+			<button class="set">Frans</button>
+			<button class="set">Bio</button>
+			<button class="set">Ned</button>
+		</div>
+		<div class="bottom-toolbar">
+			<a href="#start" class="back">Terug</a>
+			<a href="#new" class="new-set">+</a>
+		</div>
+	</div>
+</body>
+
+</html>
