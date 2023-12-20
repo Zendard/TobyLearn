@@ -6,7 +6,7 @@
 	<!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
 	<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
 	<meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
-	<link rel="stylesheet" href="styles.css">
+	<link rel="stylesheet" href="../styles.css">
 	<title>TobyLearn</title>
 </head>
 
@@ -17,9 +17,11 @@
 	</div>
 	<div id="choose-set">
 		<div class="grid">
-			<button class="set">Frans</button>
-			<button class="set">Bio</button>
-			<button class="set">Ned</button>
+			<%Object.keys(sets).forEach(set=> {%>
+				<a href="/sets/frans" class="set">
+					<%= set %>
+				</a>
+				<%}); %>
 		</div>
 		<div class="bottom-toolbar">
 			<a href="#start" class="back">Terug</a>

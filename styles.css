@@ -111,8 +111,13 @@ a:hover {
 	border-radius: var(--br);
 	box-shadow: var(--secondary) 0.5rem 0.5rem;
 	transition: box-shadow 0.4s;
+	text-transform: capitalize;
 }
 
 .set:hover {
+	background-color: var(--primary);
+	color: initial;
+	padding: 3rem 3rem;
+	filter: none;
 	box-shadow: var(--secondary) 1rem 1rem;
 }
