@@ -21,8 +21,8 @@ body {
 	transition: all 1s;
 }
 
-#start,
-#choose-set {
+section,
+learner-section {
 	position: relative;
 	display: flex;
 	flex-direction: column;
@@ -120,4 +120,9 @@ a:hover {
 	padding: 3rem 3rem;
 	filter: none;
 	box-shadow: var(--secondary) 1rem 1rem;
+}
+
+.top {
+	position: absolute;
+	top: 1rem;
 }

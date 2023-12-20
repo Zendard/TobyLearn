@@ -7,18 +7,19 @@
 	<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
 	<meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
 	<link rel="stylesheet" href="../styles.css">
+	<link rel="import" href="./questioner.ejs" />
 	<title>TobyLearn</title>
 </head>
 
 <body>
-	<div id="start">
+	<section id="start">
 		<h1 id="title">Toby<span>L</span>earn</h1>
 		<a href="#choose-set">Kies een set</a>
-	</div>
-	<div id="choose-set">
+	</section>
+	<section id="choose-set">
 		<div class="grid">
 			<%Object.keys(sets).forEach(set=> {%>
-				<a href="/sets/frans" class="set">
+				<a href="#<%= set %>" class="set">
 					<%= set %>
 				</a>
 				<%}); %>
@@ -27,7 +28,20 @@
 			<a href="#start" class="back">Terug</a>
 			<a href="#new" class="new-set">+</a>
 		</div>
-	</div>
+	</section>
+
+	<template id="learner-section">
+		<link rel="stylesheet" href="../styles.css">
+		<h2 class="top">Wow</h2>
+		<div class="bottom-toolbar">
+			<a href="#choose-set" class="back">Terug</a>
+		</div>
+	</template>
+
+	<script src="../scripts/fillPages.js"></script>
+	<%Object.keys(sets).forEach(set=> {%>
+		<learner-section id="<%= set %>"></learner-section>
+		<%}); %>
 </body>
 
 </html>
