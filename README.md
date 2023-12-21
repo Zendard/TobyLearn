@@ -28,4 +28,10 @@ Example .tl file:
   "stoel": "chaise"
 }
 ```
+## Screenshots
 
+![Screenshot of main menu](https://i.ibb.co/yfbF67c/image.png)
+
+![Screenshot of set menu](https://i.ibb.co/9wTy7pS/image.png)
+
+![Screenshot of questioning menu](https://i.ibb.co/RQWKN2j/image.png)
