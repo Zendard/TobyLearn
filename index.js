@@ -1,5 +1,4 @@
-const { app, BrowserWindow } = require("electron/main");
-const ejse = require("ejs-electron");
+const { app, BrowserWindow, ipcMain } = require("electron/main");
 const fs = require("fs");
 const path = require("path");
 const setsPath = "./sets/";
@@ -12,19 +11,16 @@ const createWindow = () => {
 	const win = new BrowserWindow({
 		width: 800,
 		height: 600,
+		webPreferences: {
+			preload: path.join(__dirname, "preload.js"),
+		},
 	});
-	win.removeMenu();
-	win.loadURL("file://" + __dirname + "/views/index.ejs");
+	// win.removeMenu();
+	win.loadFile("./index.html");
 };
 
 app.whenReady().then(() => {
-	getSets()
-		.then((sets) => {
-			ejse.data("sets", sets);
-		})
-		.catch((error) => {
-			console.error("Error getting sets:", error);
-		});
+	ipcMain.handle("getSets", getSets);
 	createWindow();
 
 	app.on("activate", () => {
@@ -34,7 +30,7 @@ app.whenReady().then(() => {
 	});
 });
 
-function getSets() {
+async function getSets() {
 	return new Promise((resolve, reject) => {
 		let sets = {};
 		fs.readdir(setsPath, (err, files) => {

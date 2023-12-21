@@ -7,7 +7,7 @@
 	<meta http-equiv="Content-Security-Policy"
 		content="default-src 'self' https://ka-f.fontawesome.com; script-src 'self' https://kit.fontawesome.com/dc3124471a.js; style-src 'unsafe-inline' 'self'" />
 	<meta http-equiv="X-Content-Security-Policy" content="default-src 'self'; script-src 'self'" />
-	<link rel="stylesheet" href="../styles.css">
+	<link rel="stylesheet" href="./styles.css">
 	<script src="https://kit.fontawesome.com/dc3124471a.js" crossorigin="anonymous"></script>
 	<title>TobyLearn</title>
 </head>
@@ -19,38 +19,22 @@
 	</section>
 	<section id="choose-set">
 		<div class="grid">
-			<%Object.keys(sets).forEach(set=> {%>
-				<a href="#<%= set %>" class="set">
-					<%= set %>
-				</a>
-				<%}); %>
 		</div>
 		<div class="bottom-toolbar">
 			<a href="#start" class="back">Terug</a>
 			<a href="#new" class="new-set">+</a>
 		</div>
 	</section>
-	<%Object.keys(sets).forEach(set=> {%>
-		<section id="<%= set %>" class="questioner">
-			<h2 class="top">
-				<%= set %>
-			</h2>
-			<h2 class="question">Ik ben</h2>
-			<p id="list-<%= set %>" class="answer-list">
-				<%= JSON.stringify(sets[set]) %>
-			</p>
-			<div class="form">
-				<input class="answer" type="text" name="answer" id="answer-<%= set %>">
-				<button type="button" id="button-<%= set %>" class="check neutral"><i
-						class="fa-solid fa-question"></i></button>
-			</div>
-			<div class="bottom-toolbar">
-				<a href="#choose-set" class="back">Terug</a>
-			</div>
-		</section>
-		<%}); %>
-			<script src="../scripts/autoGrowInput.js"></script>
-			<script src="../scripts/questioner.js"></script>
+	<!-- <Object.keys(sets).forEach(set=> {%> -->
+	<!-- <section id="<%= set %>" class="questioner">
+		<div class="bottom-toolbar">
+			<a href="#choose-set" class="back">Terug</a>
+		</div>
+	</section> -->
+	<!-- <}); %> -->
+	<script src="./scripts/fillPage.js"></script>
+	<script src="./scripts/autoGrowInput.js"></script>
+	<script src="./scripts/questioner.js"></script>
 </body>
 
 </html>
