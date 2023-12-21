@@ -178,6 +178,12 @@ input:focus {
 	border: 0.3rem solid lime;
 }
 
+.questioner>.form>button.wrong {
+	animation: wrong 0.5s forwards;
+	background-color: red;
+	border: 0.3rem solid red;
+}
+
 @keyframes correct {
 	0% {
 		rotate: 0deg;
@@ -190,6 +196,28 @@ input:focus {
 
 	100% {
 		rotate: 360deg;
+		scale: 1;
+	}
+}
+
+@keyframes wrong {
+	0% {
+		rotate: 0deg;
+		scale: 1;
+	}
+
+	25%,
+	75% {
+		rotate: -20deg
+	}
+
+	50% {
+		scale: 1.2;
+		rotate: 20deg;
+	}
+
+	100% {
+		rotate: 0deg;
 		scale: 1;
 	}
 }

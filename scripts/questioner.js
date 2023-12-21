@@ -19,10 +19,7 @@ answerInput.addEventListener("keypress", (e) => {
 });
 
 function checkAnswer(e) {
-	console.log(answerInput.value);
-	console.log(randomList[Object.keys(randomList)[counter]]);
 	if (answerInput.value == randomList[Object.keys(randomList)[counter]]) {
-		console.log("Correct!");
 		checkButton.querySelector("i").classList.replace("fa-question", "fa-check");
 		checkButton.classList.replace("neutral", "correct");
 		setTimeout(() => {
@@ -32,9 +29,25 @@ function checkAnswer(e) {
 			checkButton.classList.replace("correct", "neutral");
 		}, 600);
 	} else {
-		console.log("wrong!");
+		checkButton.querySelector("i").classList.replace("fa-question", "fa-xmark");
+		checkButton.classList.replace("neutral", "wrong");
+		setTimeout(() => {
+			checkButton
+				.querySelector("i")
+				.classList.replace("fa-xmark", "fa-question");
+			checkButton.classList.replace("wrong", "neutral");
+		}, 600);
 	}
 	counter++;
 	questionText.textContent = Object.keys(randomList)[counter];
+	if (answerInput.value == randomList[Object.keys(randomList)[counter]]) {
+		console.log(Object.keys(randomList)[counter]);
+		delete randomList[randomList[Object.keys(randomList)[counter]]];
+	}
+	if (Object.keys(randomList).length <= counter) {
+		counter = 0;
+		questionText.textContent = Object.keys(randomList)[counter];
+	}
 	answerInput.value = "";
+	console.log(randomList);
 }
