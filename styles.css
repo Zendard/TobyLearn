@@ -88,6 +88,15 @@ a:hover {
 	gap: 1rem;
 }
 
+.back {
+	background-color: var(--secondary);
+	border: solid 0.3rem var(--secondary);
+}
+
+.back:hover {
+	color: var(--secondary);
+}
+
 .grid {
 	display: grid;
 	width: 100vw;
@@ -123,6 +132,50 @@ a:hover {
 }
 
 .top {
+	text-transform: capitalize;
 	position: absolute;
 	top: 1rem;
+}
+
+.question {
+	font-size: clamp(0.5rem, 10vw, 5rem);
+	text-transform: capitalize;
+}
+
+input {
+	transition: width 0.2s;
+	min-width: clamp(2rem, 80vw, 10rem);
+	width: 1rem;
+	font-size: 2rem;
+	border-radius: var(--br);
+	border: none;
+	padding: 0.2rem 0.5rem;
+	text-align: center;
+}
+
+input:focus {
+	outline: 0.2rem solid var(--accent);
+}
+
+form {
+	display: flex;
+	gap: 1rem;
+}
+
+.questioner>form>button {
+	background-color: var(--accent);
+	border: 0.3rem solid var(--accent);
+	border-radius: var(--br);
+	font-size: 1rem;
+	font-weight: 700;
+	transition: padding 0.1s;
+	cursor: pointer;
+}
+
+.questioner>form>button:hover {
+	padding: 0rem 1rem;
+}
+
+p.answer-list {
+	display: none;
 }

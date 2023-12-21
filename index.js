@@ -13,14 +13,14 @@ const createWindow = () => {
 		width: 800,
 		height: 600,
 	})
-	// win.removeMenu()
+	//win.removeMenu()
 	win.loadURL('file://' + __dirname + '/views/index.ejs')
 }
 
 app.whenReady().then(() => {
 	getSets()
   .then(sets => {
-    ejse.data('sets', sets)
+    ejse.data('sets',sets)
   })
   .catch(error => {
     console.error('Error getting sets:', error);
@@ -54,7 +54,6 @@ function getSets() {
 						}
 						const dictionary = JSON.parse(data);
 						sets[path.basename(file, '.tl')] = dictionary;
-						sets['toby'] = 'hond';
 						resolve();
 					});
 				});
