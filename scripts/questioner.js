@@ -4,7 +4,7 @@ const checkButton = section.querySelector("button");
 const questionText = section.querySelector(".question");
 const wordList = JSON.parse(section.querySelector(".answer-list").textContent);
 
-const randomList = Object.fromEntries(
+let randomList = Object.fromEntries(
 	Object.entries(wordList).sort(() => Math.random() - 0.5)
 );
 
@@ -19,6 +19,9 @@ answerInput.addEventListener("keypress", (e) => {
 });
 
 function checkAnswer(e) {
+	console.log(randomList);
+	console.log(answerInput.value);
+	console.log(randomList[Object.keys(randomList)[counter]]);
 	if (answerInput.value == randomList[Object.keys(randomList)[counter]]) {
 		checkButton.querySelector("i").classList.replace("fa-question", "fa-check");
 		checkButton.classList.replace("neutral", "correct");
@@ -40,14 +43,20 @@ function checkAnswer(e) {
 	}
 	counter++;
 	questionText.textContent = Object.keys(randomList)[counter];
-	if (answerInput.value == randomList[Object.keys(randomList)[counter]]) {
-		console.log(Object.keys(randomList)[counter]);
-		delete randomList[randomList[Object.keys(randomList)[counter]]];
+	if (answerInput.value == randomList[Object.keys(randomList)[counter - 1]]) {
+		counter--;
+		delete randomList[Object.keys(randomList)[counter]];
+		questionText.textContent = Object.keys(randomList)[counter];
 	}
 	if (Object.keys(randomList).length <= counter) {
+		randomList = Object.fromEntries(
+			Object.entries(randomList).sort(() => Math.random() - 0.5)
+		);
 		counter = 0;
 		questionText.textContent = Object.keys(randomList)[counter];
 	}
 	answerInput.value = "";
-	console.log(randomList);
+	if (Object.keys(randomList).length <= 0) {
+		questionText.textContent = "Set voltooid!";
+	}
 }
