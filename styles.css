@@ -157,12 +157,12 @@ input:focus {
 	outline: 0.2rem solid var(--accent);
 }
 
-form {
+.form {
 	display: flex;
 	gap: 1rem;
 }
 
-.questioner>form>button {
+.questioner>.form>button {
 	background-color: var(--accent);
 	border: 0.3rem solid var(--accent);
 	border-radius: var(--br);
@@ -172,7 +172,29 @@ form {
 	cursor: pointer;
 }
 
-.questioner>form>button:hover {
+.questioner>.form>button.correct {
+	animation: correct 0.5s forwards;
+	background-color: lime;
+	border: 0.3rem solid lime;
+}
+
+@keyframes correct {
+	0% {
+		rotate: 0deg;
+		scale: 1;
+	}
+
+	50% {
+		scale: 1.5;
+	}
+
+	100% {
+		rotate: 360deg;
+		scale: 1;
+	}
+}
+
+.questioner>.form>button:hover {
 	padding: 0rem 1rem;
 }
 
