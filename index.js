@@ -1,7 +1,7 @@
 const { app, BrowserWindow, ipcMain } = require("electron/main");
 const fs = require("fs");
 const path = require("path");
-const setsPath = "./sets/";
+const setsPath = path.join(__dirname, "sets", ".");
 if (require("electron-squirrel-startup")) app.quit();
 try {
 	require("electron-reloader")(module);
@@ -42,7 +42,7 @@ async function getSets() {
 			const tlFiles = files.filter((file) => path.extname(file) === ".tl");
 			const readFilePromises = tlFiles.map((file) => {
 				return new Promise((resolve, reject) => {
-					fs.readFile(setsPath + file, "utf8", (err, data) => {
+					fs.readFile(path.join(setsPath, file), "utf8", (err, data) => {
 						if (err) {
 							console.error("Error reading file:", err);
 							reject(err);
