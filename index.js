@@ -13,7 +13,7 @@ const createWindow = () => {
 		width: 800,
 		height: 600,
 	});
-	//win.removeMenu()
+	win.removeMenu();
 	win.loadURL("file://" + __dirname + "/views/index.ejs");
 };
 

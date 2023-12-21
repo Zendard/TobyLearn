@@ -58,5 +58,10 @@ function checkAnswer(e) {
 	answerInput.value = "";
 	if (Object.keys(randomList).length <= 0) {
 		questionText.textContent = "Set voltooid!";
+		setTimeout(() => {
+			checkButton
+				.querySelector("i")
+				.classList.replace("fa-question", "fa-rotate-right");
+		}, 600);
 	}
 }

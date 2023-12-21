@@ -163,6 +163,7 @@ input:focus {
 }
 
 .questioner>.form>button {
+	padding: 0rem 1rem;
 	background-color: var(--accent);
 	border: 0.3rem solid var(--accent);
 	border-radius: var(--br);
@@ -223,7 +224,7 @@ input:focus {
 }
 
 .questioner>.form>button:hover {
-	padding: 0rem 1rem;
+	filter: brightness(150%);
 }
 
 p.answer-list {
