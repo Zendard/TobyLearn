@@ -4,11 +4,12 @@ const { app, BrowserWindow, ipcMain, dialog } = require("electron/main");
 const fs = require("node:fs/promises");
 const path = require("path");
 const setsPath = path.join(__dirname, "sets", ".");
-require("update-electron-app")();
+const { updateElectronApp } = require("update-electron-app")();
 if (require("electron-squirrel-startup")) app.quit();
 try {
 	require("electron-reloader")(module);
 } catch (_) {}
+updateElectronApp();
 
 const createWindow = () => {
 	const win = new BrowserWindow({
@@ -19,7 +20,7 @@ const createWindow = () => {
 			preload: path.join(__dirname, "preload.js"),
 		},
 	});
-	// win.removeMenu();
+	win.removeMenu();
 	win.loadFile("./index.html");
 };
 
