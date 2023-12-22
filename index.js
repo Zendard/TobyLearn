@@ -4,6 +4,7 @@ const { app, BrowserWindow, ipcMain, dialog } = require("electron/main");
 const fs = require("node:fs/promises");
 const path = require("path");
 const setsPath = path.join(__dirname, "sets", ".");
+require("update-electron-app")();
 if (require("electron-squirrel-startup")) app.quit();
 try {
 	require("electron-reloader")(module);
