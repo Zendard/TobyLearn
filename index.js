@@ -1,5 +1,7 @@
-const { app, BrowserWindow, ipcMain } = require("electron/main");
-const fs = require("fs");
+const { options } = require("ejs-electron");
+const { webContents } = require("electron");
+const { app, BrowserWindow, ipcMain, dialog } = require("electron/main");
+const fs = require("node:fs/promises");
 const path = require("path");
 const setsPath = path.join(__dirname, "sets", ".");
 if (require("electron-squirrel-startup")) app.quit();
@@ -21,6 +23,7 @@ const createWindow = () => {
 
 app.whenReady().then(() => {
 	ipcMain.handle("getSets", getSets);
+	ipcMain.handle("dialog:openFile", importFile);
 	createWindow();
 
 	app.on("activate", () => {
@@ -31,37 +34,27 @@ app.whenReady().then(() => {
 });
 
 async function getSets() {
-	return new Promise((resolve, reject) => {
+	return new Promise(async (resolve, reject) => {
 		let sets = {};
-		fs.readdir(setsPath, (err, files) => {
-			if (err) {
-				console.error("Error reading directory:", err);
-				reject(err);
-				return;
-			}
-			const tlFiles = files.filter((file) => path.extname(file) === ".tl");
-			const readFilePromises = tlFiles.map((file) => {
-				return new Promise((resolve, reject) => {
-					fs.readFile(path.join(setsPath, file), "utf8", (err, data) => {
-						if (err) {
-							console.error("Error reading file:", err);
-							reject(err);
-							return;
-						}
-						const dictionary = JSON.parse(data);
-						sets[path.basename(file, ".tl")] = dictionary;
-						resolve();
-					});
-				});
+		const files = await fs.readdir(setsPath).catch(callback);
+		const tlFiles = files.filter((file) => path.extname(file) === ".tl");
+		const readFilePromises = tlFiles.map(async (file) => {
+			return new Promise(async (resolve, reject) => {
+				const data = await fs
+					.readFile(path.join(setsPath, file), "utf8")
+					.catch(callback);
+				const dictionary = JSON.parse(data);
+				sets[path.basename(file, ".tl")] = dictionary;
+				resolve();
 			});
-			Promise.all(readFilePromises)
-				.then(() => {
-					resolve(sets);
-				})
-				.catch((error) => {
-					reject(error);
-				});
 		});
+		Promise.all(readFilePromises)
+			.then(() => {
+				resolve(sets);
+			})
+			.catch((error) => {
+				reject(error);
+			});
 	});
 }
 
@@ -70,3 +63,52 @@ app.on("window-all-closed", () => {
 		app.quit();
 	}
 });
+
+async function importFile() {
+	const { canceled, filePaths } = await dialog.showOpenDialog({
+		filters: [{ name: "TobyLearn sets", extensions: ["tl"] }],
+	});
+	if (!canceled) {
+		await filePaths.forEach(async (file) => {
+			const statOriginal = await fs.stat(file).catch((e) => {});
+			if (!statOriginal) {
+				await fs
+					.copyFile(file, path.join(setsPath, path.basename(file)))
+					.catch(callback);
+				return true;
+			} else {
+				let number;
+				for (i = 1; i < 10; i++) {
+					let stat = await fs
+						.stat(
+							path.join(
+								setsPath,
+								path.basename(file, ".tl") + "(" + i + ")" + ".tl"
+							)
+						)
+						.catch((e) => {});
+					if (!stat) {
+						number = i;
+						break;
+					}
+				}
+				await fs
+					.copyFile(
+						file,
+						path.join(
+							"/",
+							setsPath,
+							path.basename(file, ".tl") + "(" + number + ")" + ".tl"
+						)
+					)
+					.catch(callback);
+				return true;
+			}
+		});
+	}
+}
+function callback(err) {
+	if (err) {
+		throw err;
+	}
+}

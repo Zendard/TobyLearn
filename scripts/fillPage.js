@@ -1,7 +1,8 @@
-const setSelectSectionGrid = document.querySelector("#choose-set>.grid");
+let setSelectSectionGrid = document.querySelector("#choose-set>.grid");
 
 async function getSetsFromBackend() {
 	setsDict = await window.electronAPI.getSets();
+	console.log(setsDict);
 	return setsDict;
 }
 async function addLinks() {

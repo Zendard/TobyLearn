@@ -43,7 +43,9 @@ h1 {
 	color: var(--secondary);
 }
 
-a {
+a,
+button {
+	cursor: pointer;
 	text-decoration: none;
 	color: var(--text);
 	padding: 0.5rem 2rem;
@@ -54,11 +56,23 @@ a {
 	transition: padding 0.3s;
 }
 
-a:hover {
+.bottom-toolbar>a,
+.bottom-toolbar>button {
+	font-size: 1rem;
+	padding: 0.5rem 1rem;
+}
+
+a:hover,
+button:hover {
 	background-color: var(--background);
 	color: var(--accent);
 	padding: 0.5rem 3rem;
 	filter: brightness(110%);
+}
+
+.bottom-toolbar>a:hover,
+.bottom-toolbar>button:hover {
+	padding: 0.5rem 2rem;
 }
 
 .back,
