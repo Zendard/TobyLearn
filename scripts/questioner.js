@@ -16,15 +16,15 @@ linkList.forEach((link) => {
 });
 
 async function init(setName) {
-	console.log(checkButton);
 	questionCounter = 0;
 	const allSets = await window.electronAPI.getSets();
 	set = await shuffleObject(allSets[setName]);
-	console.log(set);
 	questionText.textContent = Object.keys(set)[questionCounter];
 	title.textContent = setName;
 	answerInput.addEventListener("keydown", keyboardCheck);
 	checkButton.addEventListener("click", checkAnswer);
+	answerInput.style.display = "block";
+	checkButton.style.display = "block";
 }
 
 async function checkAnswer() {
@@ -35,6 +35,13 @@ async function checkAnswer() {
 		wrong();
 	}
 	answerInput.value = "";
+	if (Object.keys(set).length <= 0) {
+		questionText.textContent = "Set gedaan!";
+		setTimeout(() => {
+			answerInput.style.display = "none";
+			checkButton.style.display = "none";
+		}, 700);
+	}
 }
 
 async function correct() {
