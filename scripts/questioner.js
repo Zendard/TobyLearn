@@ -1,87 +1,80 @@
-const section = document.querySelector("#frans");
-const answerInput = section.querySelector("input");
-const checkButton = section.querySelector("button");
-const questionText = section.querySelector(".question");
+const section = document.querySelector("#questioner");
+const questionText = section.querySelector("#question");
+const title = section.querySelector(".top");
+const answerInput = section.querySelector("#answer");
+const checkButton = section.querySelector("#check");
+let questionCounter;
 
-function repeat(e) {
-	checkButton
-		.querySelector("i")
-		.classList.replace("fa-rotate-right", "fa-question");
-	checkButton.removeEventListener("click", repeat);
-	mainLoop();
+const linkList = document.querySelectorAll("#choose-set>.grid>a");
+
+linkList.forEach((link) => {
+	link.addEventListener("click", (e) => {
+		const questioner = document.querySelector("#questioner");
+		questioner.dataset.set = link.textContent;
+		init(link.textContent);
+	});
+});
+
+async function init(setName) {
+	console.log(checkButton);
+	questionCounter = 0;
+	const allSets = await window.electronAPI.getSets();
+	set = await shuffleObject(allSets[setName]);
+	console.log(set);
+	questionText.textContent = Object.keys(set)[questionCounter];
+	title.textContent = setName;
+	answerInput.addEventListener("keydown", keyboardCheck);
+	checkButton.addEventListener("click", checkAnswer);
 }
 
-async function checkAnswer(e) {
-	console.log(randomList);
-	if (
-		answerInput.value == (await randomList[Object.keys(randomList)[counter]])
-	) {
-		checkButton.querySelector("i").classList.replace("fa-question", "fa-check");
-		checkButton.classList.replace("neutral", "correct");
-		setTimeout(() => {
-			checkButton
-				.querySelector("i")
-				.classList.replace("fa-check", "fa-question");
-			checkButton.classList.replace("correct", "neutral");
-		}, 600);
+async function checkAnswer() {
+	console.log(set);
+	if (answerInput.value == set[questionText.textContent]) {
+		correct();
 	} else {
-		checkButton.querySelector("i").classList.replace("fa-question", "fa-xmark");
-		checkButton.classList.replace("neutral", "wrong");
-		setTimeout(() => {
-			checkButton
-				.querySelector("i")
-				.classList.replace("fa-xmark", "fa-question");
-			checkButton.classList.replace("wrong", "neutral");
-		}, 600);
-	}
-	counter++;
-	questionText.textContent = Object.keys(randomList)[counter];
-	if (answerInput.value == randomList[Object.keys(randomList)[counter - 1]]) {
-		counter--;
-		delete randomList[Object.keys(randomList)[counter]];
-		questionText.textContent = Object.keys(randomList)[counter];
-	}
-	if (Object.keys(randomList).length <= counter) {
-		randomList = Object.fromEntries(
-			Object.entries(randomList).sort(() => Math.random() - 0.5)
-		);
-		counter = 0;
-		questionText.textContent = Object.keys(randomList)[counter];
+		wrong();
 	}
 	answerInput.value = "";
-	if (Object.keys(randomList).length <= 0) {
-		questionText.textContent = "Set voltooid!";
-		setTimeout(() => {
-			checkButton
-				.querySelector("i")
-				.classList.replace("fa-question", "fa-rotate-right");
-		}, 600);
-		checkButton.removeEventListener("click", checkAnswer);
-		checkButton.addEventListener("click", repeat);
+}
+
+async function correct() {
+	delete set[Object.keys(set)[questionCounter]];
+	questionText.textContent = Object.keys(set)[questionCounter];
+	checkButton.classList.add("correct");
+	checkButton.classList.remove("neutral");
+	setTimeout(() => {
+		checkButton.classList.add("neutral");
+		checkButton.classList.remove("correct");
+	}, 700);
+}
+
+async function wrong() {
+	questionCounter++;
+	if (questionCounter >= Object.keys(set).length) {
+		questionCounter = 0;
+	}
+	questionText.textContent = Object.keys(set)[questionCounter];
+	checkButton.classList.add("wrong");
+	checkButton.classList.remove("neutral");
+	setTimeout(() => {
+		checkButton.classList.add("neutral");
+		checkButton.classList.remove("wrong");
+	}, 700);
+}
+function shuffleObject(obj) {
+	const keys = Object.keys(obj);
+	const shuffledKeys = keys.sort(() => Math.random() - 0.5);
+	const shuffledObj = {};
+	shuffledKeys.forEach((key) => {
+		shuffledObj[key] = obj[key];
+	});
+	return shuffledObj;
+}
+
+async function keyboardCheck(e) {
+	if (e.key === "Enter") {
+		if (e.key === "Enter") {
+			checkAnswer();
+		}
 	}
 }
-async function getSetsFromBackend() {
-	const setList = await window.electronAPI.getSets();
-	const wordList = setList.frans;
-	randomList = await Object.fromEntries(
-		Object.entries(wordList).sort(() => Math.random() - 0.5)
-	);
-	return randomList;
-}
-let randomList;
-let counter = 0;
-
-function mainLoop() {
-	counter = 0;
-	getSetsFromBackend().then((randomList) => {
-		console.log(randomList);
-		questionText.textContent = Object.keys(randomList)[counter];
-		answerInput.addEventListener("keypress", (e) => {
-			if (e.key === "Enter") {
-				checkAnswer();
-			}
-		});
-		checkButton.addEventListener("click", checkAnswer);
-	});
-}
-mainLoop();

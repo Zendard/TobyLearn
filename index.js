@@ -76,9 +76,8 @@ async function importFile() {
 	if (!canceled) {
 		await filePaths.forEach(async (file) => {
 			const statOriginal = await fs
-				.stat(path.join(setsPath, file))
+				.stat(path.join(setsPath, path.basename(file)))
 				.catch((e) => {});
-			console.log(statOriginal);
 			if (!statOriginal) {
 				await fs
 					.copyFile(file, path.join(setsPath, path.basename(file)))
@@ -89,10 +88,7 @@ async function importFile() {
 				for (i = 1; i < 10; i++) {
 					let stat = await fs
 						.stat(
-							path.join(
-								setsPath,
-								path.basename(file, ".tl") + "(" + i + ")" + ".tl"
-							)
+							path.join(setsPath, path.basename(file, ".tl") + "-" + i + ".tl")
 						)
 						.catch((e) => {});
 					if (!stat) {
@@ -106,7 +102,7 @@ async function importFile() {
 						path.join(
 							"/",
 							setsPath,
-							path.basename(file, ".tl") + "(" + number + ")" + ".tl"
+							path.basename(file, ".tl") + "-" + number + ".tl"
 						)
 					)
 					.catch(callback);
