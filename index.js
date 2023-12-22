@@ -3,8 +3,8 @@ const { webContents } = require("electron");
 const { app, BrowserWindow, ipcMain, dialog } = require("electron/main");
 const fs = require("node:fs/promises");
 const path = require("path");
-const setsPath = path.join(__dirname, "sets", ".");
-const { updateElectronApp } = require("update-electron-app")();
+const setsPath = path.join(app.getPath("userData"), "sets");
+const { updateElectronApp } = require("update-electron-app");
 if (require("electron-squirrel-startup")) app.quit();
 try {
 	require("electron-reloader")(module);
@@ -15,7 +15,7 @@ const createWindow = () => {
 	const win = new BrowserWindow({
 		width: 800,
 		height: 600,
-		icon: "/path/to/icon.png",
+		icon: "./iconTL.png",
 		webPreferences: {
 			preload: path.join(__dirname, "preload.js"),
 		},
@@ -24,7 +24,9 @@ const createWindow = () => {
 	win.loadFile("./index.html");
 };
 
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
+	await fs.mkdir(setsPath).catch((e) => {});
+	console.log(setsPath);
 	ipcMain.handle("getSets", getSets);
 	ipcMain.handle("dialog:openFile", importFile);
 	createWindow();
@@ -73,7 +75,10 @@ async function importFile() {
 	});
 	if (!canceled) {
 		await filePaths.forEach(async (file) => {
-			const statOriginal = await fs.stat(file).catch((e) => {});
+			const statOriginal = await fs
+				.stat(path.join(setsPath, file))
+				.catch((e) => {});
+			console.log(statOriginal);
 			if (!statOriginal) {
 				await fs
 					.copyFile(file, path.join(setsPath, path.basename(file)))
