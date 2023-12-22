@@ -6,8 +6,7 @@ Made as an alternative to the increasingly commercial Quizlet, this program aims
 ## Roadmap
 
 - GUI for creating sets
-- Abilty to open .tl files
-- More integration with operating system (taskbar icon, drag and drop sets, ...)
+- More integration with operating system (drag and drop sets, ...)
 - Accent buttons
 - Choice of case/accent sensitivity
 
