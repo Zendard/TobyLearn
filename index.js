@@ -20,7 +20,9 @@ const createWindow = () => {
 			preload: path.join(__dirname, "preload.js"),
 		},
 	});
-	win.removeMenu();
+	if (process.env.NODE_ENV === "production") {
+		win.removeMenu();
+	}
 	win.loadFile("./index.html");
 };
 
@@ -29,6 +31,7 @@ app.whenReady().then(async () => {
 	console.log(setsPath);
 	ipcMain.handle("getSets", getSets);
 	ipcMain.handle("dialog:openFile", importFile);
+	ipcMain.handle("makeSet", makeSet);
 	createWindow();
 
 	app.on("activate", () => {
@@ -71,7 +74,7 @@ app.on("window-all-closed", () => {
 
 async function importFile() {
 	const { canceled, filePaths } = await dialog.showOpenDialog({
-		filters: [{ name: "TobyLearn sets", extensions: ["tl"] }],
+		filters: [{ name: "TobyLearn sets (.tl)", extensions: ["tl"] }],
 	});
 	if (!canceled) {
 		await filePaths.forEach(async (file) => {
@@ -110,6 +113,10 @@ async function importFile() {
 			}
 		});
 	}
+}
+
+async function makeSet(formData) {
+	console.log(formData);
 }
 function callback(err) {
 	if (err) {

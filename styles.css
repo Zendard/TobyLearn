@@ -244,3 +244,23 @@ input:focus {
 p.answer-list {
 	display: none;
 }
+
+#new-set>form {
+	flex-grow: 1;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: stretch;
+	gap: 0.5rem;
+
+	h2 {
+		text-align: center;
+	}
+
+	fieldset {
+		border: none;
+		display: flex;
+		justify-content: space-between;
+		gap: 1rem;
+	}
+}
