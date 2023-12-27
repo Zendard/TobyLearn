@@ -20,7 +20,7 @@ const createWindow = () => {
 			preload: path.join(__dirname, "preload.js"),
 		},
 	});
-	if (process.env.NODE_ENV === "production") {
+	if (app.isPackaged) {
 		win.removeMenu();
 	}
 	win.loadFile("./index.html");

@@ -1,13 +1,13 @@
 {
 	"name": "tobylearn",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "A simple learning helper made with electron",
 	"main": "index.js",
 	"scripts": {
-		"start": "electron-forge start",
+		"start": "NODE_ENV=dev electron-forge start",
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"package": "electron-forge package",
-		"make": "electron-forge make"
+		"make": "NODE_ENV=prod electron-forge make"
 	},
 	"author": "Zendard",
 	"license": "ISC",
