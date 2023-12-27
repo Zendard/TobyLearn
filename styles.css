@@ -252,6 +252,9 @@ p.answer-list {
 	justify-content: center;
 	align-items: stretch;
 	gap: 0.5rem;
+	overflow-y: scroll;
+	width: 100%;
+	padding-bottom: 5rem;
 
 	h2 {
 		text-align: center;
@@ -262,5 +265,15 @@ p.answer-list {
 		display: flex;
 		justify-content: space-between;
 		gap: 1rem;
+		padding: 0rem 20rem;
+	}
+
+	button.new-set {
+		margin: 0rem auto;
+	}
+
+	#set-title {
+		align-self: center;
+		margin-bottom: 3rem;
 	}
 }

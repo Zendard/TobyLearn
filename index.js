@@ -119,12 +119,16 @@ async function makeSet(e, formString) {
 	const formData = await JSON.parse(formString);
 	const formValues = Object.values(formData);
 	const json = {};
-	for (i = 0; i < formValues.length; i += 2) {
+	for (i = 1; i < formValues.length - 2; i += 2) {
 		json[formValues[i]] = formValues[i + 1];
 	}
 	console.log(json);
 	await fs
-		.writeFile(path.join(setsPath, "test.tl"), JSON.stringify(json), "utf-8")
+		.writeFile(
+			path.join(setsPath, formValues[0] + ".tl"),
+			JSON.stringify(json),
+			"utf-8"
+		)
 		.catch(callback);
 }
 function callback(err) {
