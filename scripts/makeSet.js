@@ -1,10 +1,13 @@
 const makeSetForm = document.querySelector("#new-set>form");
+console.log(makeSetForm);
+const button = makeSetForm.querySelector("button.new-set");
 
-makeSetForm
-	.querySelector("button.new-set")
-	.addEventListener("click", getFormData);
+button.addEventListener("click", getFormData);
 
 async function getFormData(e) {
-	const formData = new FormData(makeSetForm);
-	await window.electronAPI.makeSet(formData);
+	const formData = await new FormData(makeSetForm, button);
+	const object = {};
+	formData.forEach((value, key) => (object[key] = value));
+	const json = JSON.stringify(object);
+	window.electronAPI.makeSet(json);
 }

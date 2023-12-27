@@ -31,7 +31,7 @@ app.whenReady().then(async () => {
 	console.log(setsPath);
 	ipcMain.handle("getSets", getSets);
 	ipcMain.handle("dialog:openFile", importFile);
-	ipcMain.handle("makeSet", makeSet);
+	ipcMain.on("makeSet", makeSet);
 	createWindow();
 
 	app.on("activate", () => {
@@ -115,8 +115,17 @@ async function importFile() {
 	}
 }
 
-async function makeSet(formData) {
-	console.log(formData);
+async function makeSet(e, formString) {
+	const formData = await JSON.parse(formString);
+	const formValues = Object.values(formData);
+	const json = {};
+	for (i = 0; i < formValues.length; i += 2) {
+		json[formValues[i]] = formValues[i + 1];
+	}
+	console.log(json);
+	await fs
+		.writeFile(path.join(setsPath, "test.tl"), JSON.stringify(json), "utf-8")
+		.catch(callback);
 }
 function callback(err) {
 	if (err) {
