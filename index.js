@@ -32,6 +32,7 @@ app.whenReady().then(async () => {
 	ipcMain.handle("getSets", getSets);
 	ipcMain.handle("dialog:openFile", importFile);
 	ipcMain.on("makeSet", makeSet);
+	ipcMain.on("deleteSet", deleteSet);
 	createWindow();
 
 	app.on("activate", () => {
@@ -125,11 +126,15 @@ async function makeSet(e, formString) {
 	console.log(json);
 	await fs
 		.writeFile(
-			path.join(setsPath, formValues[0] + ".tl"),
+			path.join(setsPath, formValues[0].toLowerCase() + ".tl"),
 			JSON.stringify(json),
 			"utf-8"
 		)
 		.catch(callback);
+}
+
+async function deleteSet(e, set) {
+	await fs.unlink(path.join(setsPath, set.toLowerCase() + ".tl"));
 }
 function callback(err) {
 	if (err) {

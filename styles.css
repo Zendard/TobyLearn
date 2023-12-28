@@ -124,6 +124,7 @@ button:hover {
 }
 
 .set {
+	position: relative;
 	font-size: 2rem;
 	padding: 3rem 3rem;
 	margin: 1rem;
@@ -300,4 +301,45 @@ form::-webkit-scrollbar-track {
 #new-set>.bottom-toolbar {
 	bottom: 0px;
 	position: relative;
+}
+
+.delete-set {
+	position: absolute;
+	top: 0.4rem;
+	right: 0.4rem;
+	font-size: 1rem;
+	padding: 0.4rem;
+	background-color: red;
+	border: 0.2rem solid red;
+}
+
+.delete-set:hover {
+	padding: 0.4rem;
+	color: red;
+}
+
+dialog {
+	border-radius: var(--br);
+	background-color: var(--primary);
+	border: none;
+	box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+
+	.delete {
+		background-color: red;
+		border: 0.2rem solid red;
+	}
+
+	.delete:hover {
+		background-color: var(--background);
+		color: red;
+	}
+
+	.cancel:hover {
+		background-color: var(--accent);
+		color: var(--text);
+	}
+}
+
+::backdrop {
+	background-color: rgba(0, 0, 0, 0.39);
 }

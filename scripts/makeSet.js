@@ -1,5 +1,4 @@
 const makeSetForm = document.querySelector("#new-set>form");
-console.log(makeSetForm);
 const button = makeSetForm.querySelector("button.new-set");
 
 button.addEventListener("click", getFormData);
