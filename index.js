@@ -13,8 +13,10 @@ updateElectronApp();
 
 const createWindow = () => {
 	const win = new BrowserWindow({
-		width: 800,
+		width: 1000,
 		height: 600,
+		minWidth: 600,
+		minHeight: 500,
 		icon: "./iconTL.png",
 		webPreferences: {
 			preload: path.join(__dirname, "preload.js"),
