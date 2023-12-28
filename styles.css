@@ -21,8 +21,7 @@ body {
 	transition: all 1s;
 }
 
-section,
-learner-section {
+section {
 	position: relative;
 	display: flex;
 	flex-direction: column;
@@ -76,18 +75,21 @@ button:hover {
 }
 
 .back,
-.new-set {
+.new-set,
+.edit-set-confirm {
 	font-size: 1rem;
 	padding: 0.5rem 1rem;
 }
 
-.new-set {
+.new-set,
+.edit-set-confirm {
 	border: 0.3rem solid rgb(19, 83, 19);
 	background-color: rgb(19, 83, 19);
 	font-weight: 900;
 }
 
-.new-set:hover {
+.new-set:hover,
+.edit-set-confirm:hover {
 	color: var(--text);
 	background-color: rgb(19, 83, 19);
 }
@@ -246,7 +248,8 @@ p.answer-list {
 	display: none;
 }
 
-#new-set>form {
+#new-set>form,
+#edit-set>form {
 	display: flex;
 	flex-direction: column;
 	align-items: stretch;
@@ -269,7 +272,8 @@ p.answer-list {
 		margin: 0rem auto;
 	}
 
-	button.new-set {
+	button.new-set,
+	button.edit-set-confirm {
 		margin: 0rem auto;
 	}
 
@@ -316,6 +320,19 @@ form::-webkit-scrollbar-track {
 .delete-set:hover {
 	padding: 0.4rem;
 	color: red;
+}
+
+.edit-set {
+	position: absolute;
+	top: 0.4rem;
+	right: 3rem;
+	font-size: 1rem;
+	padding: 0.4rem;
+	border: 0.2rem solid var(--accent);
+}
+
+.edit-set:hover {
+	padding: 0.4rem;
 }
 
 dialog {
