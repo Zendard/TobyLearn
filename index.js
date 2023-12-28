@@ -35,6 +35,7 @@ app.whenReady().then(async () => {
 	ipcMain.handle("dialog:openFile", importFile);
 	ipcMain.on("makeSet", makeSet);
 	ipcMain.on("deleteSet", deleteSet);
+	ipcMain.on("editSet", editSet);
 	createWindow();
 
 	app.on("activate", () => {
@@ -137,6 +138,27 @@ async function makeSet(e, formString) {
 
 async function deleteSet(e, set) {
 	await fs.unlink(path.join(setsPath, set.toLowerCase() + ".tl"));
+}
+
+async function editSet(e, setString) {
+	const inputSet = JSON.parse(setString);
+	const name = await inputSet["set-title"];
+	const formValues = Object.values(inputSet);
+	const json = {};
+	for (i = 1; i < formValues.length - 2; i += 2) {
+		json[formValues[i]] = formValues[i + 1];
+	}
+	console.log(json);
+	await fs.unlink(path.join(setsPath, name + ".tl")).catch((e) => {
+		console.log("title changed");
+	});
+	await fs
+		.writeFile(
+			path.join(setsPath, formValues[0].toLowerCase() + ".tl"),
+			JSON.stringify(json),
+			"utf-8"
+		)
+		.catch(callback);
 }
 function callback(err) {
 	if (err) {

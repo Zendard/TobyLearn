@@ -1,11 +1,21 @@
 const editSection = document.querySelector("#edit-set");
 const editButtons = document.querySelectorAll(".edit-set");
 
+async function editSet(e) {
+	const formData = await new FormData(
+		editSection.querySelector("form"),
+		editSection.querySelector(".edit-set-confirm")
+	);
+	const object = {};
+	formData.forEach((value, key) => (object[key] = value));
+	const json = JSON.stringify(object);
+	window.electronAPI.editSet(json);
+}
 editButtons.forEach((editButton) => {
-	editButton.addEventListener("click", editSet);
+	editButton.addEventListener("click", fillForm);
 });
 
-async function editSet(e) {
+async function fillForm(e) {
 	const setName = e.currentTarget.parentNode.innerText.toLowerCase();
 	e.preventDefault();
 	const sets = await window.electronAPI.getSets();
@@ -14,6 +24,10 @@ async function editSet(e) {
 	editSection.querySelector("#set-title").value = setName;
 	window.location.href = "#edit-set";
 	const editForm = editSection.querySelector("form");
+
+	editSection
+		.querySelector(".edit-set-confirm")
+		.addEventListener("click", editSet);
 
 	let inputCounter = 1;
 	Object.keys(set).forEach((key) => {
