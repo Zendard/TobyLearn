@@ -1,7 +1,31 @@
-# Tauri + React + Typescript
+# TobyLearn (tauri rewrite)
 
-This template should help get you started developing with Tauri, React and Typescript in Vite.
+Made as an alternative to the increasingly commercial Quizlet, this program aims to provide a simple and efficient learning experience without paywalls or unnecessary distractions.
 
-## Recommended IDE Setup
+This branch is a rewrite of main written in tauri(rust) instead of electron(node)
 
-- [VS Code](https://code.visualstudio.com/) + [Tauri](https://marketplace.visualstudio.com/items?itemName=tauri-apps.tauri-vscode) + [rust-analyzer](https://marketplace.visualstudio.com/items?itemName=rust-lang.rust-analyzer)
+## Roadmap
+
+- GUI for creating sets
+- More integration with operating system (drag and drop sets, ...)
+- Accent buttons
+- Choice of case/accent sensitivity
+
+## Creating sets
+
+Currently there is no GUI for creating sets but instead it is done by creating a .tl file and editing it with a text editor
+
+Example .tl file:
+
+```json
+{
+	"question": "answer",
+
+	"huis": "maison",
+	"auto": "voiture",
+	"boek": "livre",
+	"fiets": "vélo",
+	"tafel": "table",
+	"stoel": "chaise"
+}
+```
