@@ -1,0 +1,15 @@
+.set {
+	background-color: var(--primary);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	font-size: 7vh;
+	border-radius: var(--br);
+}
+
+.grid {
+	display: grid;
+	flex-grow: 1;
+	grid-auto-rows: minmax(auto, 30vh);
+	grid-auto-columns: minmax(auto, 30vh);
+}

@@ -17,6 +17,7 @@ body {
 	font-family: sans-serif;
 	padding: 0;
 	margin: 0;
+	text-transform: capitalize;
 }
 
 section {
@@ -25,6 +26,11 @@ section {
 	justify-content: center;
 	flex-direction: column;
 	height: 100dvh;
+}
+
+h1 {
+	font-size: 3rem;
+	justify-self: start;
 }
 
 a.button {
