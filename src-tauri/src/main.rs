@@ -3,25 +3,27 @@
 extern crate directories;
 use directories::ProjectDirs;
 use std::ffi::OsStr;
+use std::path::Path;
 use std::path::PathBuf;
-use std::{error::Error, fs, path::Path};
 
 #[tauri::command]
 fn get_all_sets() -> Result<String, String> {
     if let Some(proj_dirs) = ProjectDirs::from("org", "zendard", "TobyLearn") {
-        let file_list = proj_dirs.config_dir().read_dir().ok().unwrap();
+        let file_list = proj_dirs.config_dir().join("sets").read_dir().ok().unwrap();
         let file_list: Vec<PathBuf> = file_list
             .into_iter()
             .map(|file_name| file_name.map(|e| e.path()).unwrap())
             .collect();
-        let filtered_list = file_list
+        let filtered_list: Vec<PathBuf> = file_list
             .iter()
-            .filter(|file| Path::extension(file.as_path()) == Some(OsStr::new("tl")));
-        let str_list: Vec<&str> = file_list
-            .iter()
-            .map(|filePath| filePath.to_str().unwrap())
+            .filter(|file| Path::extension(file.as_path()) == Some(OsStr::new("tl")))
+            .map(|file| file.to_owned())
             .collect();
-        Ok(str_list.concat())
+        let str_list: Vec<&str> = filtered_list
+            .iter()
+            .map(|file_path| Path::file_stem(file_path).unwrap().to_str().unwrap())
+            .collect();
+        Ok(str_list.join(","))
     } else {
         Err("Error while getting sets".to_string())
     }
