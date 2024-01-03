@@ -4,15 +4,9 @@ Made as an alternative to the increasingly commercial Quizlet, this program aims
 
 
 ## Roadmap
-
-- GUI for creating sets
 - More integration with operating system (drag and drop sets, ...)
 - Accent buttons
 - Choice of case/accent sensitivity
-
-
-## Creating sets
-Currently there is no GUI for creating sets but instead it is done by creating a .tl file and editing it with a text editor
 
 Example .tl file:
 ```json
