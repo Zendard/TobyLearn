@@ -30,13 +30,22 @@ fn get_all_sets() -> Result<String, String> {
     }
 }
 #[tauri::command]
-fn get_file_content(file: String) -> Result<String, String> {
-    let file_content: String = fs::read(file)
-        .unwrap()
-        .iter()
-        .map(|e| e.to_string())
-        .collect();
-    Ok(file_content)
+fn get_file_content(file_string: String) -> Result<String, String> {
+    if let Some(proj_dirs) = ProjectDirs::from("org", "zendard", "TobyLearn") {
+        let file_path = Path::new(&proj_dirs.config_dir()).join(&file_string);
+        if file_path.is_file() {
+            let file_content: String = fs::read(file_path)
+                .unwrap()
+                .iter()
+                .map(|e| e.to_string())
+                .collect();
+            Ok(file_content)
+        } else {
+            Err("File not found".to_string())
+        }
+    } else {
+        Err("Project folder not found".to_string())
+    }
 }
 
 fn main() {

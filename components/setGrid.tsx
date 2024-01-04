@@ -9,7 +9,7 @@ invoke<string>('get_all_sets').then((setsString)=>{
 	const sets=setsString.split(',')
  const setCardArray=sets.map((setName)=>
 
-<Card key={setName} className="cursor-pointer" onClick={()=>{setCurrentSet(setName)}}><CardHeader><CardTitle>{setName}</CardTitle></CardHeader></Card>
+<Card key={setName} className="cursor-pointer" onClick={()=>{setCurrentSet(setName)}}><CardHeader key={setName+'-header'}><CardTitle key={setName+'-title'}>{setName}</CardTitle></CardHeader></Card>
  )
  setSetElements(setCardArray)
 })
