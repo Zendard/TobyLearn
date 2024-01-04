@@ -1,14 +1,15 @@
 import { Card ,CardHeader,CardTitle,CardFooter} from "@/components/ui/card";
 import {invoke} from '@tauri-apps/api/tauri'
+import { argv0 } from "process";
 import { ReactElement, useState } from "react";
 
-export function SetGrid(){
+export function SetGrid({setCurrentSet}:{setCurrentSet:(arg0: string)=>void}){
 let [setElements,setSetElements]=useState([<></>])
 invoke<string>('get_all_sets').then((setsString)=>{
 	const sets=setsString.split(',')
  const setCardArray=sets.map((setName)=>
 
-<Card key={setName}><CardHeader><CardTitle>{setName}</CardTitle></CardHeader></Card>
+<Card key={setName} className="cursor-pointer" onClick={()=>{setCurrentSet(setName)}}><CardHeader><CardTitle>{setName}</CardTitle></CardHeader></Card>
  )
  setSetElements(setCardArray)
 })

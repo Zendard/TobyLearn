@@ -3,6 +3,7 @@
 extern crate directories;
 use directories::ProjectDirs;
 use std::ffi::OsStr;
+use std::fs;
 use std::path::Path;
 use std::path::PathBuf;
 
@@ -28,10 +29,19 @@ fn get_all_sets() -> Result<String, String> {
         Err("Error while getting sets".to_string())
     }
 }
+#[tauri::command]
+fn get_file_content(file: String) -> Result<String, String> {
+    let file_content: String = fs::read(file)
+        .unwrap()
+        .iter()
+        .map(|e| e.to_string())
+        .collect();
+    Ok(file_content)
+}
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![get_all_sets])
+        .invoke_handler(tauri::generate_handler![get_all_sets, get_file_content])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
