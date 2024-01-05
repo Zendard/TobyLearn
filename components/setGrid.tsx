@@ -6,10 +6,9 @@ export function SetGrid({setCurrentSet}:{setCurrentSet:(arg0: string)=>void}){
 	const [setElements,setSetElements]=useState([<></>])
 	invoke<string>('get_all_sets').then((setsString)=>{
 		const sets=setsString.split(',')
-		const setCardArray=sets.map((setName)=>
-
-			<Card key={setName} className="cursor-pointer" onClick={()=>{setCurrentSet(setName)}}><CardHeader key={setName+'-header'}><CardTitle key={setName+'-title'}>{setName}</CardTitle></CardHeader></Card>
-		)
+		const setCardArray=sets.map((setName)=>{
+			return (<Card key={setName} className="cursor-pointer" onClick={()=>{setCurrentSet(setName)}}><CardHeader key={setName+'-header'}><CardTitle key={setName+'-title'}>{setName}</CardTitle></CardHeader></Card>)
+		})
 		setSetElements(setCardArray)
 	})
 	return(
