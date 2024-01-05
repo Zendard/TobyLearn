@@ -9,43 +9,54 @@ use std::path::PathBuf;
 
 #[tauri::command]
 fn get_all_sets() -> Result<String, String> {
-    if let Some(proj_dirs) = ProjectDirs::from("org", "zendard", "TobyLearn") {
-        let file_list = proj_dirs.config_dir().join("sets").read_dir().ok().unwrap();
-        let file_list: Vec<PathBuf> = file_list
-            .into_iter()
-            .map(|file_name| file_name.map(|e| e.path()).unwrap())
-            .collect();
-        let filtered_list: Vec<PathBuf> = file_list
-            .iter()
-            .filter(|file| Path::extension(file.as_path()) == Some(OsStr::new("tl")))
-            .map(|file| file.to_owned())
-            .collect();
-        let str_list: Vec<&str> = filtered_list
-            .iter()
-            .map(|file_path| Path::file_stem(file_path).unwrap().to_str().unwrap())
-            .collect();
-        Ok(str_list.join(","))
-    } else {
-        Err("Error while getting sets".to_string())
+    let proj_dirs = ProjectDirs::from("org", "zendard", "TobyLearn");
+    if proj_dirs.is_none() {
+        return Err("Project directory not found".to_string());
     }
+
+    let files: Vec<PathBuf> = proj_dirs
+        .unwrap()
+        .config_dir()
+        .join("sets")
+        .read_dir()
+        .ok()
+        .unwrap()
+        .into_iter()
+        .map(|file_name| file_name.map(|e| e.path()).unwrap())
+        .collect();
+
+    let files_filtered: Vec<PathBuf> = files
+        .iter()
+        .filter(|file| Path::extension(file.as_path()) == Some(OsStr::new("tl")))
+        .map(|file| file.to_owned())
+        .collect();
+    let files_output: Vec<&str> = files_filtered
+        .iter()
+        .map(|file_path| Path::file_stem(file_path).unwrap().to_str().unwrap())
+        .collect();
+    Ok(files_output.join(","))
 }
 #[tauri::command]
 fn get_file_content(file_string: String) -> Result<String, String> {
-    if let Some(proj_dirs) = ProjectDirs::from("org", "zendard", "TobyLearn") {
-        let file_path = Path::new(&proj_dirs.config_dir()).join(&file_string);
-        if file_path.is_file() {
-            let file_content: String = fs::read(file_path)
-                .unwrap()
-                .iter()
-                .map(|e| e.to_string())
-                .collect();
-            Ok(file_content)
-        } else {
-            Err("File not found".to_string())
-        }
-    } else {
-        Err("Project folder not found".to_string())
+    let proj_dirs = ProjectDirs::from("org", "zendard", "TobyLearn");
+    if proj_dirs.is_none() {
+        return Err("Project directory not found".to_string());
     }
+    let proj_dirs = ProjectDirs::from("org", "zendard", "TobyLearn").unwrap();
+    let sets_folder_path = Path::new(&proj_dirs.config_dir()).join("sets");
+    if !sets_folder_path.is_dir() {
+        fs::create_dir(sets_folder_path).err();
+    }
+    let sets_folder_path = Path::new(&proj_dirs.config_dir()).join("sets");
+
+    let file_path = sets_folder_path.join(&file_string);
+    if !file_path.is_file() {
+        let file_path_error = file_path.as_os_str().to_str().unwrap();
+        return Err(format!("Error while reading file {file_path_error}").to_string());
+    }
+
+    let file_content: String = String::from_utf8(fs::read(file_path).unwrap()).unwrap();
+    Ok(file_content)
 }
 
 fn main() {
