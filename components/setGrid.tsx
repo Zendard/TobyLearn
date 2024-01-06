@@ -7,7 +7,7 @@ export function SetGrid({setCurrentSet}:{setCurrentSet:(arg0: string)=>void}){
 	invoke<string>('get_all_sets').then((setsString)=>{
 		const sets=setsString.split(',')
 		const setCardArray=sets.map((setName)=>{
-			return (<Card key={setName} className="cursor-pointer" onClick={()=>{setCurrentSet(setName)}}><CardHeader key={setName+'-header'}><CardTitle key={setName+'-title'}>{setName}</CardTitle></CardHeader></Card>)
+			return (<Card key={setName} className="cursor-pointer" onClick={()=>{setCurrentSet(setName); window.location.href = '#questioner'}}><CardHeader key={setName+'-header'}><CardTitle key={setName+'-title'}>{setName}</CardTitle></CardHeader></Card>)
 		})
 		setSetElements(setCardArray)
 	})
