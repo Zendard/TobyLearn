@@ -88,4 +88,43 @@
 		height: 100vh;
 		position: relative;
 	}
+
+	Button.correct {
+		animation: correct 0.5s forwards;
+	}
+
+	Button.wrong {
+		animation: wrong 0.5s forwards;
+	}
+
+	@keyframes correct {
+		from {
+			background-color: lime;
+		}
+
+		50% {
+			scale: 1.3;
+			background-color: lime;
+		}
+
+		to {
+			scale: 1;
+			rotate: 360deg;
+
+		}
+	}
+
+	@keyframes wrong {
+		from {
+			background-color: red;
+			opacity: 1;
+		}
+
+		to {
+			background-color: red;
+			rotate: 50deg;
+			translate: 0rem 3rem;
+			opacity: 0;
+		}
+	}
 }
