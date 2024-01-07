@@ -8,12 +8,17 @@ import { UseFormReturn, useForm } from 'react-hook-form'
 import * as z from 'zod'
 
 export function Questioner({currentSet,setError}:{currentSet:string,setError:(arg0: string)=>void}){
-	const [fileContent,setFileContent]=useState({'question':'answer'})
+	const [fileContent,setFileContent]=useState(Object)
 	useEffect(()=>{
 		GetSet(currentSet,setError,setFileContent)
 	},[currentSet])
 	const [questionCounter,setQuestionCounter]=useState(0)
 
+	useEffect(()=>{
+		if(questionCounter>=Object.keys(fileContent).length){
+			setQuestionCounter(0)
+		}
+	},[questionCounter,Object.keys(fileContent).length])
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema),
 		defaultValues: {
@@ -28,7 +33,7 @@ export function Questioner({currentSet,setError}:{currentSet:string,setError:(ar
 			<h1 id="question" className="text-7xl">{Object.keys(fileContent)[questionCounter]}</h1>
 			<Form {...form}>
 				<form className="flex gap-3" onSubmit={
-					form.handleSubmit((data)=>checkAnswer(questionCounter,fileContent,data,setQuestionCounter,form,setButtonClass,setFileContent))
+					form.handleSubmit((data)=>checkAnswer(questionCounter,fileContent,data,form,setButtonClass,setFileContent,setQuestionCounter))
 				}>
 					<FormField
 						control={form.control}
@@ -47,7 +52,7 @@ export function Questioner({currentSet,setError}:{currentSet:string,setError:(ar
 		</div>
 	)
 }
-function GetSet(currentSet:string,setError:(arg0: string)=>void, setFileContent: { (value: SetStateAction<{[question:string]:string}>): void}){
+function GetSet(currentSet:string,setError:(arg0: string)=>void, setFileContent: Dispatch<SetStateAction<{[question:string]:string}>>){
 	if (currentSet.length<=0) return
 
 	invoke<string>('get_file_content',{'fileString':currentSet+'.tl'}).then((fileContent)=>{
@@ -61,22 +66,18 @@ const FormSchema = z.object({
 	answer: z.string(),
 })
 
-function checkAnswer(questionCounter:number,fileContent:{[question:string]:string},data: z.infer<typeof FormSchema>,setQuestionCounter: Dispatch<SetStateAction<number>>,form: UseFormReturn<{ answer: string }>,setButtonClass: Dispatch<SetStateAction<string>>,setFileContent: Dispatch<SetStateAction<{ [question:string]: string }>>){
-	console.log(data.answer)
-	console.log(fileContent[Object.keys(fileContent)[questionCounter]])
+function checkAnswer(questionCounter:number,fileContent:{[question:string]:string},data: z.infer<typeof FormSchema>,form: UseFormReturn<{ answer: string }>,setButtonClass: Dispatch<SetStateAction<string>>,setFileContent: Dispatch<SetStateAction<{ [question:string]: string }>>,setQuestionCounter: { (value: SetStateAction<number>): void; (arg0: number): void }){
 	if(data.answer == fileContent[Object.keys(fileContent)[questionCounter]]){
 		const newObject=fileContent
 		delete newObject[Object.keys(newObject)[questionCounter]]
-		console.log(questionCounter)
-		console.log(newObject)
 		setFileContent(newObject)
 		setButtonClass('correct')
 		setTimeout(()=>setButtonClass(''),1000)
 	}else{
-		console.log('fout')
 		setButtonClass('wrong')
 		setTimeout(()=>setButtonClass(''),1000)
-		setQuestionCounter(questionCounter+1)
+		if(questionCounter<Object.keys(fileContent).length){setQuestionCounter(questionCounter+1)}
+		
 	}
 	form.setValue('answer','')
 }
