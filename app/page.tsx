@@ -1,6 +1,6 @@
 'use client'
 import { Button } from '@/components/ui/button'
-import { ThemeToggle } from '@/components/ui/theme-toggle'
+import { Settings } from '@/components/settings'
 import {SetGrid} from '@/components/setGrid'
 import {Questioner} from '@/components/questioner'
 import {useState, useEffect } from 'react'
@@ -14,7 +14,7 @@ export default function Home() {
 	return (
 		<main>
 			<section id="start">
-				<ThemeToggle/>
+				<Settings/>
 				<h1 className='text-8xl'>TobyLearn</h1>
 				<Button onClick={()=>{window.location.href='#choose-set'}}>Kies een Set</Button>
 			</section>
