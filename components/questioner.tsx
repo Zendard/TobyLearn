@@ -58,6 +58,7 @@ function GetSet(currentSet:string,setError:(arg0: string)=>void, setFileContent:
 	invoke<string>('get_file_content',{'fileString':currentSet+'.tl'}).then((fileContent)=>{
 		const JSONFile= JSON.parse(fileContent)
 		Object.keys(JSONFile).sort(()=>Math.round(Math.random())-0.5)
+		console.log(JSONFile)
 		setFileContent(JSONFile)
 	}).catch(setError)
 
