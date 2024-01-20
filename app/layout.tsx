@@ -20,7 +20,7 @@ export default function RootLayout({
 			<body className={inter.className}> 
 				<ThemeProvider
 					attribute="class"
-					defaultTheme="system"
+					defaultTheme="red"
 					enableSystem
 					themes={['white','blue','red']}
 				>

@@ -8,22 +8,41 @@ import {
 } from '@/components/ui/sheet'
 import { SettingsIcon } from 'lucide-react'
 import { Switch } from '@/components/ui/switch'
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from '@/components/ui/select'
-import { useTheme } from 'next-themes'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
+import { Button } from '@/components/ui/button'
+import {
+	Form,
+	FormControl,
+	FormDescription,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
+} from '@/components/ui/form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { useForm } from 'react-hook-form'
+import * as z from 'zod'
+
 
   
   
 
 export function Settings(){
-	const { theme, setTheme } = useTheme()
+	const settingsSchema = z.object({
+		accentColor: z.string(),
+	})
+	const form = useForm<z.infer<typeof settingsSchema>>({
+		resolver: zodResolver(settingsSchema),
+		defaultValues: {
+			accentColor: 'red',
+		},
+	})
+
+	function onSubmit(values: z.infer<typeof settingsSchema>) {
+		console.log(values)
+	}
+
 	return(
 		<Sheet>
 			<SheetTrigger  className='absolute top-10 right-10 duration-100'><SettingsIcon /></SheetTrigger>
@@ -31,24 +50,29 @@ export function Settings(){
 				<SheetHeader>
 					<SheetTitle>Settings</SheetTitle>
 				</SheetHeader>
-				<form onSubmit={()=>{setTheme('blue')}} className="flex flex-col h-full">
-					<div className="grow py-1 flex flex-col gap-5">
-						<fieldset className="flex justify-between">
-							<Label htmlFor='accent-color'>Accent Color</Label>
-							<RadioGroup className='flex' id='accent-color'>
-								<RadioGroupItem value='white' className='border-white'/>
-								<RadioGroupItem value='blue' className='border-blue-700'/>
-								<RadioGroupItem value='red' className='border-red-700'/>
-							</RadioGroup>
-						</fieldset>
-						<fieldset className="flex justify-between">
-							<Label>Shuffle question order</Label>
-							<Switch />
-						</fieldset>
-					</div>
-
-					<SheetClose type='submit' className='inline-flex items-center justify-center whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2'>Save</SheetClose>
-				</form>
+				<Form {...form}>
+					<form onSubmit={form.handleSubmit(onSubmit)} className="h-dvh flex flex-col overflow-y-auto gap-2">
+						<FormField
+							control={form.control}
+							name="accentColor"
+							render={({ field }) => (
+								<FormItem className='flex justify-between'>
+									<FormLabel>Accent Color</FormLabel>
+									<FormControl className='flex items-center'>
+										<RadioGroup {...field}>
+											<RadioGroupItem value='white' className='border-white'/>
+											<RadioGroupItem value='blue' className='border-blue-700'/>
+											<RadioGroupItem value='red' className='border-red-700'/>
+										</RadioGroup>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<Button type="submit">Submit</Button>
+					</form>
+				</Form>
+				
 			</SheetContent>
 		</Sheet>
 
