@@ -1,6 +1,5 @@
 import {
 	Sheet,
-	SheetClose,
 	SheetContent,
 	SheetHeader,
 	SheetTitle,
@@ -8,13 +7,11 @@ import {
 } from '@/components/ui/sheet'
 import { SettingsIcon } from 'lucide-react'
 import { Switch } from '@/components/ui/switch'
-import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Button } from '@/components/ui/button'
 import {
 	Form,
 	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
@@ -31,11 +28,13 @@ import * as z from 'zod'
 export function Settings(){
 	const settingsSchema = z.object({
 		accentColor: z.string(),
+		randomizeQuestions: z.boolean()
 	})
 	const form = useForm<z.infer<typeof settingsSchema>>({
 		resolver: zodResolver(settingsSchema),
 		defaultValues: {
 			accentColor: 'red',
+			randomizeQuestions: true
 		},
 	})
 
@@ -56,14 +55,27 @@ export function Settings(){
 							control={form.control}
 							name="accentColor"
 							render={({ field }) => (
-								<FormItem className='flex justify-between'>
-									<FormLabel>Accent Color</FormLabel>
+								<FormItem className='flex justify-between items-center'>
+									<FormLabel>Theme</FormLabel>
 									<FormControl className='flex items-center'>
-										<RadioGroup {...field}>
+										<RadioGroup onValueChange={field.onChange} defaultValue={field.value}>
 											<RadioGroupItem value='white' className='border-white'/>
 											<RadioGroupItem value='blue' className='border-blue-700'/>
 											<RadioGroupItem value='red' className='border-red-700'/>
 										</RadioGroup>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="randomizeQuestions"
+							render={({ field }) => (
+								<FormItem className='flex justify-between items-center'>
+									<FormLabel>Randomize questions?</FormLabel>
+									<FormControl className='flex items-center'>
+										<Switch checked={field.value} onCheckedChange={field.onChange}/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
