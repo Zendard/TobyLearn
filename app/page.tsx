@@ -11,13 +11,14 @@ import { useToast } from '@/components/ui/use-toast'
 
 export interface Isettings{
 	accentColor:string,
-	randomizeQuestions: boolean
+	randomizeQuestions: boolean,
+	caseSensitive:boolean
 }
 
 export default function Home() {
 	const {toast}=useToast()
 	const [currentSet,setCurrentSet]=useState('')
-	const [settings,setSettings]=useState<Isettings>({accentColor:'none',randomizeQuestions:true})
+	const [settings,setSettings]=useState<Isettings>({accentColor:'none',randomizeQuestions:true,caseSensitive:true})
 	const { setTheme } = useTheme()
 	useEffect(()=>{
 		invoke<string>('get_settings').then((settings)=>{setSettings(JSON.parse(settings))}).catch((e)=>toast({variant:'destructive',title:'Error!',description:e}))

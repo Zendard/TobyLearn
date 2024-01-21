@@ -41,7 +41,7 @@ export function Questioner({currentSet,settings}:{currentSet:string,settings:Ise
 			<h1 id="question" className="text-7xl text-center">{keyArray[questionCounter]}</h1>
 			<Form {...form}>
 				<form className="flex gap-3" onSubmit={
-					form.handleSubmit((data)=>checkAnswer(questionCounter,fileContent,data,form,setButtonClass,setFileContent,setQuestionCounter,keyArray))
+					form.handleSubmit((data)=>checkAnswer(questionCounter,fileContent,data,form,setButtonClass,setFileContent,setQuestionCounter,keyArray,settings))
 				}>
 					<FormField
 						control={form.control}
@@ -88,8 +88,8 @@ const FormSchema = z.object({
 	answer: z.string(),
 })
 
-function checkAnswer(questionCounter:number,fileContent:{[question:string]:string},data: z.infer<typeof FormSchema>,form: UseFormReturn<{ answer: string }>,setButtonClass: Dispatch<SetStateAction<string>>,setFileContent: Dispatch<SetStateAction<{ [question:string]: string }>>,setQuestionCounter: { (value: SetStateAction<number>): void; (arg0: number): void },keyArray: (string | number)[]){
-	if(data.answer == fileContent[keyArray[questionCounter]]){
+function checkAnswer(questionCounter:number,fileContent:{[question:string]:string},data: z.infer<typeof FormSchema>,form: UseFormReturn<{ answer: string }>,setButtonClass: Dispatch<SetStateAction<string>>,setFileContent: Dispatch<SetStateAction<{ [question:string]: string }>>,setQuestionCounter: { (value: SetStateAction<number>): void; (arg0: number): void },keyArray: (string | number)[],settings:Isettings){
+	if(data.answer == fileContent[keyArray[questionCounter]] || (!settings.caseSensitive && data.answer.toLowerCase() == fileContent[keyArray[questionCounter]].toLowerCase())){
 		const newObject=fileContent
 		delete newObject[keyArray[questionCounter]]
 		setFileContent(newObject)
