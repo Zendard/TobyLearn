@@ -9,7 +9,7 @@ import { invoke } from '@tauri-apps/api'
 import { useTheme } from 'next-themes'
 import { useToast } from '@/components/ui/use-toast'
 
-interface Isettings{
+export interface Isettings{
 	accentColor:string,
 	randomizeQuestions: boolean
 }
@@ -30,7 +30,7 @@ export default function Home() {
 	return (
 		<main>
 			<section id="start">
-				<Settings/>
+				<Settings settings={settings}/>
 				<h1 className='text-8xl'>TobyLearn</h1>
 				<Button onClick={()=>{window.location.href='#choose-set'}}>Kies een Set</Button>
 			</section>

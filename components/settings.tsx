@@ -1,5 +1,6 @@
 import {
 	Sheet,
+	SheetClose,
 	SheetContent,
 	SheetHeader,
 	SheetTitle,
@@ -24,12 +25,10 @@ import {invoke} from '@tauri-apps/api/tauri'
 import { useToast} from '@/components/ui/use-toast'
 import { useTheme } from 'next-themes'
 import { Separator } from '@/components/ui/separator'
-
-
   
   
 
-export function Settings(){
+export function Settings({settings}:{settings:{accentColor:string,randomizeQuestions:boolean}}){
 	const {setTheme}=useTheme()
 	const {toast}=useToast()
 
@@ -39,10 +38,7 @@ export function Settings(){
 	})
 	const form = useForm<z.infer<typeof settingsSchema>>({
 		resolver: zodResolver(settingsSchema),
-		defaultValues: {
-			accentColor: 'red',
-			randomizeQuestions: true
-		},
+		defaultValues: settings,
 	})
 
 	function onSubmit(values: z.infer<typeof settingsSchema>) {
@@ -95,7 +91,7 @@ export function Settings(){
 								</FormItem>
 							)}
 						/>
-						<Button type="submit">Submit</Button>
+						<SheetClose><Button type="submit">Submit</Button></SheetClose>
 					</form>
 				</Form>
 				
