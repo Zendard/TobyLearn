@@ -9,6 +9,7 @@ import { invoke } from '@tauri-apps/api'
 import { useTheme } from 'next-themes'
 import { useToast } from '@/components/ui/use-toast'
 
+
 export interface Isettings{
 	accentColor:string,
 	randomizeQuestions: boolean,
