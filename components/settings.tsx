@@ -25,20 +25,21 @@ import {invoke} from '@tauri-apps/api/tauri'
 import { useToast} from '@/components/ui/use-toast'
 import { useTheme } from 'next-themes'
 import { Separator } from '@/components/ui/separator'
+import { Isettings } from '@/app/page'
+import { Dispatch, SetStateAction } from 'react'
   
   
 
-export function Settings({settings}:{settings:{accentColor:string,randomizeQuestions:boolean}}){
+export function Settings({settings,setSettings}:{settings:Isettings,setSettings:Dispatch<SetStateAction<Isettings>>}){
 	const {setTheme}=useTheme()
 	const {toast}=useToast()
 
 	const settingsSchema = z.object({
-		accentColor: z.string(),
-		randomizeQuestions: z.boolean()
+		accentColor: z.string().catch(settings.accentColor),
+		randomizeQuestions: z.boolean().catch(settings.randomizeQuestions)
 	})
 	const form = useForm<z.infer<typeof settingsSchema>>({
 		resolver: zodResolver(settingsSchema),
-		defaultValues: settings,
 	})
 
 	function onSubmit(values: z.infer<typeof settingsSchema>) {
@@ -46,6 +47,10 @@ export function Settings({settings}:{settings:{accentColor:string,randomizeQuest
 		invoke<string>('save_settings',{'settings':JSON.stringify(values)}).then((successString)=>{
 			toast({title:successString})
 			setTheme(values['accentColor'])
+			invoke<string>('get_settings').then((settings)=>{
+				settingsSchema.catchall(JSON.parse(settings))
+				setSettings(JSON.parse(settings))
+			})
 		})}
 
 	return(
@@ -64,7 +69,7 @@ export function Settings({settings}:{settings:{accentColor:string,randomizeQuest
 								<FormItem className='flex justify-between items-center'>
 									<FormLabel>Theme</FormLabel>
 									<FormControl className='flex items-center'>
-										<RadioGroup onValueChange={field.onChange} defaultValue={field.value}>
+										<RadioGroup onValueChange={field.onChange} defaultValue={settings.accentColor}>
 											<RadioGroupItem value='white' className='border-white'/>
 											<RadioGroupItem value='blue' className='border-blue-700'/>
 											<RadioGroupItem value='purple' className='border-purple-700'/>
@@ -85,13 +90,13 @@ export function Settings({settings}:{settings:{accentColor:string,randomizeQuest
 								<FormItem className='flex justify-between items-center'>
 									<FormLabel>Randomize questions?</FormLabel>
 									<FormControl className='flex items-center'>
-										<Switch checked={field.value} onCheckedChange={field.onChange}/>
+										<Switch checked={field.value} defaultChecked={settings.randomizeQuestions} onCheckedChange={field.onChange}/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
 							)}
 						/>
-						<SheetClose><Button type="submit">Submit</Button></SheetClose>
+						<SheetClose asChild><Button type="submit">Submit</Button></SheetClose>
 					</form>
 				</Form>
 				

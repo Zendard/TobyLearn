@@ -7,14 +7,15 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { UseFormReturn, useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { useToast } from './ui/use-toast'
+import { Isettings } from '@/app/page'
 
-export function Questioner({currentSet}:{currentSet:string}){
+export function Questioner({currentSet,settings}:{currentSet:string,settings:Isettings}){
 	const [fileContent,setFileContent]=useState(Object)
 	const [keyArray,setKeyArray]=useState([''])
 	const {toast}=useToast()
 
 	useEffect(()=>{
-		GetSet(currentSet,setFileContent,setKeyArray,toast)
+		GetSet(currentSet,setFileContent,setKeyArray,toast,settings?.randomizeQuestions)
 	},[currentSet])
 
 	const [questionCounter,setQuestionCounter]=useState(0)
@@ -59,12 +60,16 @@ export function Questioner({currentSet}:{currentSet:string}){
 		</div>
 	)
 }
-function GetSet(currentSet:string, setFileContent: Dispatch<SetStateAction<{[question:string]:string}>>, setKeyArray: (arg0: string[])=>void,toast: ((arg0: { variant: 'destructive'; title: string; description: string }) => void)){
+function GetSet(currentSet:string, setFileContent: Dispatch<SetStateAction<{[question:string]:string}>>, setKeyArray: (arg0: string[])=>void,toast: ((arg0: { variant: 'destructive'; title: string; description: string }) => void),randomizeQuestions:boolean){
 	if (currentSet.length<=0) return
 
 	invoke<string>('get_file_content',{'fileString':currentSet+'.tl'}).then((fileContent)=>{
 		const JSONFile= JSON.parse(fileContent)
-		shuffleKeys(JSONFile,setKeyArray)
+		if(randomizeQuestions){
+			shuffleKeys(JSONFile,setKeyArray)
+		}else{
+			setKeyArray(Object.keys(JSONFile))
+		}
 		setFileContent(JSONFile)
 	}).catch((e)=>toast({
 		variant:'destructive',

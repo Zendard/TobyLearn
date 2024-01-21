@@ -30,7 +30,7 @@ export default function Home() {
 	return (
 		<main>
 			<section id="start">
-				<Settings settings={settings}/>
+				<Settings settings={settings} setSettings={setSettings}/>
 				<h1 className='text-8xl'>TobyLearn</h1>
 				<Button onClick={()=>{window.location.href='#choose-set'}}>Kies een Set</Button>
 			</section>
@@ -38,7 +38,7 @@ export default function Home() {
 				<h1 className='absolute top-5 text-xl'>Kies een set</h1>
 				<SetGrid setCurrentSet={setCurrentSet}></SetGrid>
 			</section>
-			<section id='questioner'><Questioner currentSet={currentSet}></Questioner></section>
+			<section id='questioner'><Questioner currentSet={currentSet} settings={settings}></Questioner></section>
 			<Toaster />
 		</main>
 	)
