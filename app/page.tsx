@@ -3,13 +3,12 @@ import { Button } from '@/components/ui/button'
 import { Settings } from '@/components/settings'
 import {SetGrid} from '@/components/setGrid'
 import {Questioner} from '@/components/questioner'
-import {useState, useEffect } from 'react'
+import {useState} from 'react'
 import { useToast } from '@/components/ui/use-toast'
 import { Toaster } from '@/components/ui/toaster'
 
 
 export default function Home() {
-	const [error,setError]=useState('')
 	const [currentSet,setCurrentSet]=useState('')
 	return (
 		<main>
@@ -22,22 +21,20 @@ export default function Home() {
 				<h1 className='absolute top-5 text-xl'>Kies een set</h1>
 				<SetGrid setCurrentSet={setCurrentSet}></SetGrid>
 			</section>
-			<section id='questioner'><Questioner currentSet={currentSet} setError={setError}></Questioner></section>
-			<ShowError error={error} />
+			<section id='questioner'><Questioner currentSet={currentSet}></Questioner></section>
+			<Toaster />
 		</main>
 	)
 }
 
-export function ShowError({error}:{error:string}){
+function showError(error:string){
 	if(!error){return}
 	if(error.length<=0){return}
 	console.log(error)
 	const {toast}=useToast()
-	useEffect(()=>{
-		toast({
-			variant:'destructive',
-			title: 'Error!',
-			description: error,
-		})},[error])
-	return <Toaster />
+	toast({
+		variant:'destructive',
+		title: 'Error!',
+		description: error,
+	})
 }

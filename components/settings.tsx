@@ -21,7 +21,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import {invoke} from '@tauri-apps/api/tauri'
-import { ShowError } from '@/app/page'
 
 
   
@@ -43,7 +42,7 @@ export function Settings(){
 
 	function onSubmit(values: z.infer<typeof settingsSchema>) {
 		console.log(values)
-		invoke<string>('save_settings').catch(ShowError)
+		invoke<string>('save_settings')
 	}
 
 	return(

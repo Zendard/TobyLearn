@@ -7,12 +7,12 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { UseFormReturn, useForm } from 'react-hook-form'
 import * as z from 'zod'
 
-export function Questioner({currentSet,setError}:{currentSet:string,setError:(arg0: string)=>void}){
+export function Questioner({currentSet}:{currentSet:string}){
 	const [fileContent,setFileContent]=useState(Object)
 	const [keyArray,setKeyArray]=useState([''])
 
 	useEffect(()=>{
-		GetSet(currentSet,setError,setFileContent,setKeyArray)
+		GetSet(currentSet,setFileContent,setKeyArray)
 	},[currentSet])
 
 	const [questionCounter,setQuestionCounter]=useState(0)
@@ -59,14 +59,14 @@ export function Questioner({currentSet,setError}:{currentSet:string,setError:(ar
 		</div>
 	)
 }
-function GetSet(currentSet:string,setError:(arg0: string)=>void, setFileContent: Dispatch<SetStateAction<{[question:string]:string}>>, setKeyArray: (arg0: string[])=>void){
+function GetSet(currentSet:string, setFileContent: Dispatch<SetStateAction<{[question:string]:string}>>, setKeyArray: (arg0: string[])=>void){
 	if (currentSet.length<=0) return
 
 	invoke<string>('get_file_content',{'fileString':currentSet+'.tl'}).then((fileContent)=>{
 		const JSONFile= JSON.parse(fileContent)
 		shuffleKeys(JSONFile,setKeyArray)
 		setFileContent(JSONFile)
-	}).catch(setError)
+	})
 
 }
 
