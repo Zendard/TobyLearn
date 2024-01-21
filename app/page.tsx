@@ -29,9 +29,8 @@ export default function Home() {
 }
 
 export function ShowError({error}:{error:string}){
-	if(error.length<=0){
-		return
-	}
+	if(!error){return}
+	if(error.length<=0){return}
 	console.log(error)
 	const {toast}=useToast()
 	useEffect(()=>{

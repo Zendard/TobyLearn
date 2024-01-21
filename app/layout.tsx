@@ -21,7 +21,6 @@ export default function RootLayout({
 				<ThemeProvider
 					attribute="class"
 					defaultTheme="red"
-					enableSystem
 					themes={['white','blue','red']}
 				>
 					{children}
