@@ -2,7 +2,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 extern crate directories;
 use directories::ProjectDirs;
-use std::fmt::format;
 use std::fs;
 use std::path::Path;
 
