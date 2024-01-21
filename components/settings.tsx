@@ -23,6 +23,7 @@ import * as z from 'zod'
 import {invoke} from '@tauri-apps/api/tauri'
 import { useToast} from '@/components/ui/use-toast'
 import { useTheme } from 'next-themes'
+import { Separator } from '@/components/ui/separator'
 
 
   
@@ -77,6 +78,7 @@ export function Settings(){
 								</FormItem>
 							)}
 						/>
+						<Separator className='my-2'/>
 						<FormField
 							control={form.control}
 							name="randomizeQuestions"
