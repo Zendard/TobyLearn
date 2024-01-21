@@ -71,7 +71,10 @@ export function Settings(){
 										<RadioGroup onValueChange={field.onChange} defaultValue={field.value}>
 											<RadioGroupItem value='white' className='border-white'/>
 											<RadioGroupItem value='blue' className='border-blue-700'/>
+											<RadioGroupItem value='purple' className='border-purple-700'/>
+											<RadioGroupItem value='green' className='border-green-700'/>
 											<RadioGroupItem value='red' className='border-red-700'/>
+											<RadioGroupItem value='orange' className='border-orange-700'/>
 										</RadioGroup>
 									</FormControl>
 									<FormMessage />

@@ -21,7 +21,7 @@ export default function RootLayout({
 				<ThemeProvider
 					attribute="class"
 					defaultTheme="red"
-					themes={['white','blue','red']}
+					themes={['white','blue','red','green','orange','purple']}
 				>
 					{children}
 				</ThemeProvider>
