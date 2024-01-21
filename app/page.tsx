@@ -3,13 +3,30 @@ import { Button } from '@/components/ui/button'
 import { Settings } from '@/components/settings'
 import {SetGrid} from '@/components/setGrid'
 import {Questioner} from '@/components/questioner'
-import {useState} from 'react'
-import { useToast } from '@/components/ui/use-toast'
+import {useEffect, useState} from 'react'
 import { Toaster } from '@/components/ui/toaster'
+import { invoke } from '@tauri-apps/api'
+import { useTheme } from 'next-themes'
+import { useToast } from '@/components/ui/use-toast'
 
+interface Isettings{
+	accentColor:string,
+	randomizeQuestions: boolean
+}
 
 export default function Home() {
+	const {toast}=useToast()
 	const [currentSet,setCurrentSet]=useState('')
+	const [settings,setSettings]=useState<Isettings>({accentColor:'none',randomizeQuestions:true})
+	const { setTheme } = useTheme()
+	useEffect(()=>{
+		invoke<string>('get_settings').then((settings)=>{setSettings(JSON.parse(settings))}).catch((e)=>toast({variant:'destructive',title:'Error!',description:e}))
+	},[])
+	useEffect(()=>{
+		console.log(settings)
+		setTheme(settings.accentColor)
+	},[settings])
+
 	return (
 		<main>
 			<section id="start">
@@ -25,16 +42,4 @@ export default function Home() {
 			<Toaster />
 		</main>
 	)
-}
-
-function showError(error:string){
-	if(!error){return}
-	if(error.length<=0){return}
-	console.log(error)
-	const {toast}=useToast()
-	toast({
-		variant:'destructive',
-		title: 'Error!',
-		description: error,
-	})
 }

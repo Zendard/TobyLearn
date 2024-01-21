@@ -2,6 +2,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 extern crate directories;
 use directories::ProjectDirs;
+use std::fmt::format;
 use std::fs;
 use std::path::Path;
 
@@ -62,21 +63,23 @@ fn get_all_sets() -> Result<String, String> {
 
 #[tauri::command]
 fn get_file_content(file_string: String) -> Result<String, String> {
-    let proj_dirs = ProjectDirs::from("org", "zendard", "TobyLearn");
-    if proj_dirs.is_none() {
-        return Err("Project directory not found".to_string());
-    }
-    let proj_dirs = ProjectDirs::from("org", "zendard", "TobyLearn").unwrap();
+    let proj_dirs = match get_project_dir() {
+        Err(e) => return Err(e),
+        Ok(data) => data,
+    };
     let sets_folder_path = Path::new(&proj_dirs.data_dir()).join("sets");
     if !sets_folder_path.is_dir() {
-        fs::create_dir(sets_folder_path).err();
+        match fs::create_dir(sets_folder_path) {
+            Err(e) => return Err(format!("Error while creating sets dir: {e}")),
+            Ok(dir) => dir,
+        };
     }
     let sets_folder_path = Path::new(&proj_dirs.data_dir()).join("sets");
 
     let file_path = sets_folder_path.join(&file_string);
     if !file_path.is_file() {
         let file_path_error = file_path.as_os_str().to_str().unwrap();
-        return Err(format!("Error while reading file {file_path_error}").to_string());
+        return Err(format!("Error while reading file {file_path_error}"));
     }
 
     let file_content: String = String::from_utf8(fs::read(file_path).unwrap()).unwrap();
@@ -85,15 +88,35 @@ fn get_file_content(file_string: String) -> Result<String, String> {
 
 #[tauri::command]
 fn save_settings(settings: String) -> Result<String, String> {
-    let proj_dirs = ProjectDirs::from("org", "zendard", "TobyLearn");
-    if proj_dirs.is_none() {
-        return Err("Project directory not found".to_string());
-    }
-    let settings_file = proj_dirs.unwrap().preference_dir().join("settings.json");
+    let proj_dirs = match get_project_dir() {
+        Err(e) => return Err(e),
+        Ok(data) => data,
+    };
+    let settings_file = proj_dirs.preference_dir().join("settings.json");
     match fs::write(settings_file, settings) {
         Err(e) => return Err(format!("Error saving settings: {e}").to_string()),
         Ok(_t) => return Ok("Saved settings".to_string()),
     };
+}
+
+#[tauri::command]
+fn get_settings() -> Result<String, String> {
+    let proj_dirs = match get_project_dir() {
+        Err(e) => return Err(e),
+        Ok(data) => data,
+    };
+    let settings_file = proj_dirs.preference_dir().join("settings.json");
+
+    let settings = match fs::read(settings_file) {
+        Err(e) => return Err(format!("Error while reading settings.json: {e}")),
+        Ok(data) => data,
+    };
+
+    let settings_string = match String::from_utf8(settings) {
+        Err(e) => return Err(format!("Error while parsing settings.json: {e}")),
+        Ok(data) => data,
+    };
+    return Ok(settings_string);
 }
 
 fn main() {
@@ -101,7 +124,8 @@ fn main() {
         .invoke_handler(tauri::generate_handler![
             get_all_sets,
             get_file_content,
-            save_settings
+            save_settings,
+            get_settings
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
