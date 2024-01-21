@@ -6,13 +6,15 @@ import { useState,useEffect, SetStateAction, Dispatch} from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { UseFormReturn, useForm } from 'react-hook-form'
 import * as z from 'zod'
+import { useToast } from './ui/use-toast'
 
 export function Questioner({currentSet}:{currentSet:string}){
 	const [fileContent,setFileContent]=useState(Object)
 	const [keyArray,setKeyArray]=useState([''])
+	const {toast}=useToast()
 
 	useEffect(()=>{
-		GetSet(currentSet,setFileContent,setKeyArray)
+		GetSet(currentSet,setFileContent,setKeyArray,toast)
 	},[currentSet])
 
 	const [questionCounter,setQuestionCounter]=useState(0)
@@ -35,9 +37,7 @@ export function Questioner({currentSet}:{currentSet:string}){
 	
 	return(
 		<div className="questioner flex flex-col gap-5">
-			<h1 id="question" className="text-7xl">{keyArray[questionCounter]}</h1>
-			<h2>{keyArray}</h2>
-			<h2>{Object.keys(fileContent)}</h2>
+			<h1 id="question" className="text-7xl text-center">{keyArray[questionCounter]}</h1>
 			<Form {...form}>
 				<form className="flex gap-3" onSubmit={
 					form.handleSubmit((data)=>checkAnswer(questionCounter,fileContent,data,form,setButtonClass,setFileContent,setQuestionCounter,keyArray))
@@ -59,14 +59,18 @@ export function Questioner({currentSet}:{currentSet:string}){
 		</div>
 	)
 }
-function GetSet(currentSet:string, setFileContent: Dispatch<SetStateAction<{[question:string]:string}>>, setKeyArray: (arg0: string[])=>void){
+function GetSet(currentSet:string, setFileContent: Dispatch<SetStateAction<{[question:string]:string}>>, setKeyArray: (arg0: string[])=>void,toast: ((arg0: { variant: 'destructive'; title: string; description: string }) => void)){
 	if (currentSet.length<=0) return
 
 	invoke<string>('get_file_content',{'fileString':currentSet+'.tl'}).then((fileContent)=>{
 		const JSONFile= JSON.parse(fileContent)
 		shuffleKeys(JSONFile,setKeyArray)
 		setFileContent(JSONFile)
-	})
+	}).catch((e)=>toast({
+		variant:'destructive',
+		title: 'Error!',
+		description: e,
+	}))
 
 }
 

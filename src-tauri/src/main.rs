@@ -45,12 +45,21 @@ fn get_all_sets() -> Result<String, String> {
     };
     let files_filtered: Vec<String> = files
         .filter(|file| file.as_ref().unwrap().path().extension().unwrap().to_str() == Some("tl"))
-        .map(|file| file.unwrap().file_name().to_str().unwrap().to_string())
+        .map(|file| {
+            file.unwrap()
+                .path()
+                .file_stem()
+                .unwrap()
+                .to_str()
+                .unwrap()
+                .to_string()
+        })
         .collect();
     let files_string = files_filtered.join(",");
     println!("{files_string}");
     Ok(files_string)
 }
+
 #[tauri::command]
 fn get_file_content(file_string: String) -> Result<String, String> {
     let proj_dirs = ProjectDirs::from("org", "zendard", "TobyLearn");
