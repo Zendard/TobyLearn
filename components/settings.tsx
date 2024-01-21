@@ -21,13 +21,15 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import {invoke} from '@tauri-apps/api/tauri'
-import { useToast } from './ui/use-toast'
+import { useToast} from '@/components/ui/use-toast'
+import { useTheme } from 'next-themes'
 
 
   
   
 
 export function Settings(){
+	const {setTheme}=useTheme()
 	const {toast}=useToast()
 
 	const settingsSchema = z.object({
@@ -44,8 +46,10 @@ export function Settings(){
 
 	function onSubmit(values: z.infer<typeof settingsSchema>) {
 		console.log(values)
-		invoke<string>('save_settings',{'settings':JSON.stringify(values)}).then((successString)=>toast({title:successString}))
-	}
+		invoke<string>('save_settings',{'settings':JSON.stringify(values)}).then((successString)=>{
+			toast({title:successString})
+			setTheme(values['accentColor'])
+		})}
 
 	return(
 		<Sheet>
