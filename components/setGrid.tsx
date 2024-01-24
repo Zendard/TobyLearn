@@ -1,6 +1,7 @@
 import { Card ,CardHeader,CardTitle} from '@/components/ui/card'
 import {invoke} from '@tauri-apps/api/tauri'
 import {useEffect, useState } from 'react'
+import { Button } from '@/components/ui/button'
 
 export function SetGrid({setCurrentSet}:{setCurrentSet:(arg0: string)=>void}){
 	const [setElements,setSetElements]=useState([''])
