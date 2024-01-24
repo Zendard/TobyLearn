@@ -6,7 +6,7 @@ use std::fs;
 use std::path::Path;
 
 fn get_project_dir() -> Result<ProjectDirs, String> {
-    let proj_dirs = ProjectDirs::from("org", "zendard", "TobyLearn");
+    let proj_dirs = ProjectDirs::from("org", "zendard", "tobyLearn");
     if proj_dirs.is_none() {
         return Err("Can't find project dirs".to_string());
     }

@@ -151,6 +151,14 @@
 		@apply bg-background text-foreground;
 	}
 
+	main {
+		scroll-snap-type: y mandatory;
+	}
+
+	section {
+		scroll-snap-align: center;
+	}
+
 	html {
 		scroll-behavior: smooth;
 	}
