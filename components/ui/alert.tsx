@@ -35,6 +35,7 @@ Alert.displayName = 'Alert'
 const AlertTitle = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLHeadingElement>
+// eslint-disable-next-line react/prop-types
 >(({ className, ...props }, ref) => (
 	<h5
 		ref={ref}
@@ -47,6 +48,7 @@ AlertTitle.displayName = 'AlertTitle'
 const AlertDescription = React.forwardRef<
   HTMLParagraphElement,
   React.HTMLAttributes<HTMLParagraphElement>
+  // eslint-disable-next-line react/prop-types
 >(({ className, ...props }, ref) => (
 	<div
 		ref={ref}

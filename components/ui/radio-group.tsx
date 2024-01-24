@@ -7,6 +7,7 @@ import { cn } from '@/lib/utils'
 const RadioGroup = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitive.Root>,
   React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Root>
+  // eslint-disable-next-line react/prop-types
 >(({ className, ...props }, ref) => {
 	return (
 		<RadioGroupPrimitive.Root
@@ -21,6 +22,7 @@ RadioGroup.displayName = RadioGroupPrimitive.Root.displayName
 const RadioGroupItem = React.forwardRef<
   React.ElementRef<typeof RadioGroupPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof RadioGroupPrimitive.Item>
+  // eslint-disable-next-line react/prop-types
 >(({ className, ...props }, ref) => {
 	return (
 		<RadioGroupPrimitive.Item

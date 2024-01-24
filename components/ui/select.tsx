@@ -13,6 +13,7 @@ const SelectValue = SelectPrimitive.Value
 const SelectTrigger = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Trigger>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Trigger>
+  // eslint-disable-next-line react/prop-types
 >(({ className, children, ...props }, ref) => (
 	<SelectPrimitive.Trigger
 		ref={ref}
@@ -33,6 +34,7 @@ SelectTrigger.displayName = SelectPrimitive.Trigger.displayName
 const SelectScrollUpButton = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.ScrollUpButton>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollUpButton>
+  // eslint-disable-next-line react/prop-types
 >(({ className, ...props }, ref) => (
 	<SelectPrimitive.ScrollUpButton
 		ref={ref}
@@ -50,6 +52,7 @@ SelectScrollUpButton.displayName = SelectPrimitive.ScrollUpButton.displayName
 const SelectScrollDownButton = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.ScrollDownButton>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.ScrollDownButton>
+  // eslint-disable-next-line react/prop-types
 >(({ className, ...props }, ref) => (
 	<SelectPrimitive.ScrollDownButton
 		ref={ref}
@@ -68,6 +71,7 @@ SelectScrollDownButton.displayName =
 const SelectContent = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Content>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Content>
+  // eslint-disable-next-line react/prop-types
 >(({ className, children, position = 'popper', ...props }, ref) => (
 	<SelectPrimitive.Portal>
 		<SelectPrimitive.Content
@@ -100,6 +104,7 @@ SelectContent.displayName = SelectPrimitive.Content.displayName
 const SelectLabel = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Label>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Label>
+  // eslint-disable-next-line react/prop-types
 >(({ className, ...props }, ref) => (
 	<SelectPrimitive.Label
 		ref={ref}
@@ -112,6 +117,7 @@ SelectLabel.displayName = SelectPrimitive.Label.displayName
 const SelectItem = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Item>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Item>
+  // eslint-disable-next-line react/prop-types
 >(({ className, children, ...props }, ref) => (
 	<SelectPrimitive.Item
 		ref={ref}
@@ -135,6 +141,7 @@ SelectItem.displayName = SelectPrimitive.Item.displayName
 const SelectSeparator = React.forwardRef<
   React.ElementRef<typeof SelectPrimitive.Separator>,
   React.ComponentPropsWithoutRef<typeof SelectPrimitive.Separator>
+  // eslint-disable-next-line react/prop-types
 >(({ className, ...props }, ref) => (
 	<SelectPrimitive.Separator
 		ref={ref}
