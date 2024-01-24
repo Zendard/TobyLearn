@@ -15,7 +15,9 @@ export function SetGrid({setCurrentSet}:{setCurrentSet:(arg0: string)=>void}){
 	return(
 		<div key={'grid'} className="grid auto-cols-fr auto-rows-fr grid-cols-2 gap-3 grow m-20">
 			{setElements.map((setName)=>{
-				return (<Card key={'card-'+setName} className="cursor-pointer hover:bg-white/10" onClick={()=>{setCurrentSet(setName); window.location.href = '#questioner'}}><CardHeader><CardTitle>{setName}</CardTitle></CardHeader></Card>)
+				return (<a href="#questioner" key={'anchor-'+setName} className='h-full w-full'>
+					<Card key={'card-'+setName} className="cursor-pointer hover:bg-white/10 h-full w-full" onClick={()=>{setCurrentSet(setName)}}><CardHeader><CardTitle>{setName}</CardTitle></CardHeader></Card>
+				</a>)
 			})}
 		</div>
 	)

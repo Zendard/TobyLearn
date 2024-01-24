@@ -35,7 +35,7 @@ export default function Home() {
 			<section id="start">
 				<Settings settings={settings} setSettings={setSettings}/>
 				<h1 className='text-8xl'>TobyLearn</h1>
-				<Button onClick={()=>{window.location.href='#choose-set'}}>Kies een Set</Button>
+				<Button asChild><a href="#choose-set">Kies een Set</a></Button>
 			</section>
 			<section id='choose-set'>
 				<Button asChild variant='ghost' className='absolute top-4 left-4'><a href="#start"><ArrowLeft /></a></Button>
