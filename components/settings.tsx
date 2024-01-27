@@ -21,7 +21,6 @@ import {
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
-import {invoke} from '@tauri-apps/api/tauri'
 import { useToast} from '@/components/ui/use-toast'
 import { useTheme } from 'next-themes'
 import { Separator } from '@/components/ui/separator'
@@ -45,14 +44,15 @@ export function Settings({settings,setSettings}:{settings:Isettings,setSettings:
 
 	function onSubmit(values: z.infer<typeof settingsSchema>) {
 		console.log(values)
-		invoke<string>('save_settings',{'settings':JSON.stringify(values)}).then((successString)=>{
-			toast({title:successString})
-			setTheme(values['accentColor'])
-			invoke<string>('get_settings').then((settings)=>{
-				settingsSchema.catchall(JSON.parse(settings))
-				setSettings(JSON.parse(settings))
-			})
-		})}
+		import('@tauri-apps/api/index').then((tauri)=>{
+			tauri.invoke<string>('save_settings',{'settings':JSON.stringify(values)}).then((successString)=>{
+				toast({title:successString})
+				setTheme(values['accentColor'])
+				tauri.invoke<string>('get_settings').then((settings)=>{
+					settingsSchema.catchall(JSON.parse(settings))
+					setSettings(JSON.parse(settings))
+				})
+			})})}
 
 	return(
 		<Sheet>

@@ -1,7 +1,6 @@
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
-import { invoke } from '@tauri-apps/api'
 import { useState,useEffect, SetStateAction, Dispatch} from 'react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { UseFormReturn, useForm } from 'react-hook-form'
@@ -62,21 +61,21 @@ export function Questioner({currentSet,settings}:{currentSet:string,settings:Ise
 }
 function GetSet(currentSet:string, setFileContent: Dispatch<SetStateAction<{[question:string]:string}>>, setKeyArray: (arg0: string[])=>void,toast: ((arg0: { variant: 'destructive'; title: string; description: string }) => void),randomizeQuestions:boolean){
 	if (currentSet.length<=0) return
-
-	invoke<string>('get_file_content',{'fileString':currentSet+'.tl'}).then((fileContent)=>{
-		const JSONFile= JSON.parse(fileContent)
-		if(randomizeQuestions){
-			shuffleKeys(JSONFile,setKeyArray)
-		}else{
-			setKeyArray(Object.keys(JSONFile))
-		}
-		setFileContent(JSONFile)
-	}).catch((e)=>toast({
-		variant:'destructive',
-		title: 'Error!',
-		description: e,
-	}))
-
+	import('@tauri-apps/api/index').then((tauri)=>{
+		tauri.invoke<string>('get_file_content',{'fileString':currentSet+'.tl'}).then((fileContent)=>{
+			const JSONFile= JSON.parse(fileContent)
+			if(randomizeQuestions){
+				shuffleKeys(JSONFile,setKeyArray)
+			}else{
+				setKeyArray(Object.keys(JSONFile))
+			}
+			setFileContent(JSONFile)
+		}).catch((e)=>toast({
+			variant:'destructive',
+			title: 'Error!',
+			description: e,
+		}))
+	})
 }
 
 function shuffleKeys(JSONFile: object,setKeyArray:(arg0: string[])=>void){

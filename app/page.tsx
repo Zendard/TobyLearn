@@ -5,7 +5,6 @@ import {SetGrid} from '@/components/setGrid'
 import {Questioner} from '@/components/questioner'
 import {useEffect, useState} from 'react'
 import { Toaster } from '@/components/ui/toaster'
-import { invoke } from '@tauri-apps/api'
 import { useTheme } from 'next-themes'
 import { useToast } from '@/components/ui/use-toast'
 import { ArrowLeft } from 'lucide-react'
@@ -18,12 +17,15 @@ export interface Isettings{
 }
 
 export default function Home() {
+	
 	const {toast}=useToast()
 	const [currentSet,setCurrentSet]=useState('')
 	const [settings,setSettings]=useState<Isettings>({accentColor:'none',randomizeQuestions:true,caseSensitive:true})
 	const { setTheme } = useTheme()
 	useEffect(()=>{
-		invoke<string>('get_settings').then((settings)=>{setSettings(JSON.parse(settings))}).catch((e)=>toast({variant:'destructive',title:'Error!',description:e}))
+		import('@tauri-apps/api').then((tauri)=>{
+			tauri.invoke<string>('get_settings').then((settings)=>{setSettings(JSON.parse(settings))}).catch((e)=>toast({variant:'destructive',title:'Error!',description:e}))
+		})
 	},[])
 	useEffect(()=>{
 		console.log(settings)
