@@ -36,7 +36,7 @@ module.exports = {
 			'tab'
 		],
 		'linebreak-style': [
-			'error',
+			'off',
 			'unix'
 		],
 		'quotes': [
