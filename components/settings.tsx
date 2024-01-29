@@ -6,7 +6,7 @@ import {
 	SheetTitle,
 	SheetTrigger,
 } from '@/components/ui/sheet'
-import { SettingsIcon } from 'lucide-react'
+import { LucideSettings } from 'lucide-react'
 import { Switch } from '@/components/ui/switch'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
 import { Button } from '@/components/ui/button'
@@ -56,9 +56,9 @@ export function Settings({settings,setSettings}:{settings:Isettings,setSettings:
 
 	return(
 		<Sheet>
-			<SheetTrigger  className='absolute top-10 right-10 duration-100'><Button variant={'ghost'} asChild>
-				<SettingsIcon />
-			</Button></SheetTrigger>
+			<SheetTrigger  className='absolute top-10 right-10 duration-100'>
+				<LucideSettings className='rounded-md h-10 w-10 px-2 py-2 ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 hover:bg-accent hover:text-accent-foreground' strokeWidth={'2px'}/>
+			</SheetTrigger>
 			<SheetContent className='flex flex-col h-full'>
 				<SheetHeader>
 					<SheetTitle>Settings</SheetTitle>

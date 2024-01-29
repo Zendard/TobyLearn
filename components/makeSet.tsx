@@ -10,8 +10,8 @@ import {LucideX } from 'lucide-react'
 
 
 const FormSchema = z.object({
-	title:z.string().min(3)
-}).catchall(z.string().min(3))
+	title:z.string().min(3).catch('untitled')
+}).catchall(z.string())
 
 export function MakeSet(){
 	const form = useForm<z.infer<typeof FormSchema>>({
@@ -30,6 +30,7 @@ export function MakeSet(){
 					form.handleSubmit(saveSet)
 				}>
 					<FormField
+						defaultValue=''
 						control={form.control}
 						name="title"
 						render={({ field }) => (
@@ -63,6 +64,7 @@ function fieldElement(counter:number, last:boolean, setItemCounter: { (value: Se
 	return(
 		<fieldset className='flex gap-3 mt-3' key={counter}>
 			<FormField
+				defaultValue=''
 				control={form.control}
 				name={`q-${counter}`}
 				render={({ field }) => (
@@ -78,6 +80,7 @@ function fieldElement(counter:number, last:boolean, setItemCounter: { (value: Se
 				)}
 			/>
 			<FormField
+				defaultValue=''
 				control={form.control}
 				name={`a-${counter}`}
 				render={({ field }) => (
@@ -101,5 +104,26 @@ interface Iformdata{
 }
 
 function saveSet(formdata:Iformdata){
-	console.log(formdata)
+	const title =formdata.title
+	delete formdata[title]
+	const questions: string[] = []
+	Object.keys(formdata).forEach((key)=>{
+		if(!key.startsWith('q-')) return
+		questions.push(formdata[key])
+	})
+	const answers: string[] = []
+	Object.keys(formdata).forEach((key)=>{
+		if(!key.startsWith('a-')) return
+		answers.push(formdata[key])
+	})
+
+	const json:{[question:string]:string}= {}
+	for(let i=0;i<questions.length;i++){
+		if(questions[i].length>0 && answers[i].length>0){
+			json[questions[i]]=answers[i]
+		}
+	}
+
+	console.log('tjoem')
+	console.log(json)
 }
