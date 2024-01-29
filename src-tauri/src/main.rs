@@ -144,6 +144,29 @@ fn save_set(title: String, json: String) -> Result<String, String> {
     }
 }
 
+#[tauri::command]
+fn delete_set(set_name: String) -> Result<String, String> {
+    let proj_dirs = match get_project_dir() {
+        Err(e) => return Err(e),
+        Ok(data) => data,
+    };
+    let sets_folder_path = Path::new(&proj_dirs.data_dir()).join("sets");
+    if !sets_folder_path.is_dir() {
+        match fs::create_dir(sets_folder_path) {
+            Err(e) => return Err(format!("Error while creating sets dir: {e}")),
+            Ok(dir) => dir,
+        };
+    }
+    let set_file_path = Path::new(&proj_dirs.data_dir())
+        .join("sets")
+        .join(format!("{set_name}.tl"));
+
+    match fs::remove_file(set_file_path) {
+        Err(e) => return Err(format!("Error while deleting set: {e}")),
+        Ok(_data) => return Ok(format!("Deleted set {set_name}")),
+    }
+}
+
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
@@ -151,7 +174,8 @@ fn main() {
             get_file_content,
             save_settings,
             get_settings,
-            save_set
+            save_set,
+            delete_set
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
