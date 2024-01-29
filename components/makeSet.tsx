@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { Ghost, LucideX } from 'lucide-react'
+import {LucideX } from 'lucide-react'
 
 
 const FormSchema = z.object({
