@@ -18,7 +18,7 @@ export interface Isettings{
 }
 
 export default function Home() {
-	
+	const [setElements,setSetElements]=useState([''])
 	const {toast}=useToast()
 	const [currentSet,setCurrentSet]=useState('')
 	const [settings,setSettings]=useState<Isettings>({accentColor:'none',randomizeQuestions:true,caseSensitive:true})
@@ -47,7 +47,7 @@ export default function Home() {
 						<a href="#start"><ArrowLeft /></a>
 					</Button>
 					<h1 className='absolute top-5 text-xl'>Kies een set</h1>
-					<SetGrid setCurrentSet={setCurrentSet}></SetGrid>
+					<SetGrid setCurrentSet={setCurrentSet} setElements={setElements} setSetElements={setSetElements}></SetGrid>
 					<Button asChild className='absolute bottom-10 right-10 bg-green-500 hover:bg-green-300'>
 						<a href='#make-grid'>+</a>
 					</Button>
@@ -57,7 +57,7 @@ export default function Home() {
 						<a href="#grid"><ArrowLeft /></a>
 					</Button>
 					<h1 className='absolute top-5 text-xl'>Make Set</h1>
-					<MakeSet />
+					<MakeSet setSetElements={setSetElements} />
 				</section>
 			</section>
 			<section id='questioner'>

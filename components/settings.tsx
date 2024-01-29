@@ -43,7 +43,6 @@ export function Settings({settings,setSettings}:{settings:Isettings,setSettings:
 	})
 
 	function onSubmit(values: z.infer<typeof settingsSchema>) {
-		console.log(values)
 		import('@tauri-apps/api/index').then((tauri)=>{
 			tauri.invoke<string>('save_settings',{'settings':JSON.stringify(values)}).then((successString)=>{
 				toast({title:successString})

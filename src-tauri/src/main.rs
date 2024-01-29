@@ -56,7 +56,7 @@ fn get_all_sets() -> Result<String, String> {
         })
         .collect();
     let files_string = files_filtered.join(",");
-    println!("{files_string}");
+    println!("LOG: {files_string}");
     Ok(files_string)
 }
 
@@ -118,13 +118,40 @@ fn get_settings() -> Result<String, String> {
     return Ok(settings_string);
 }
 
+#[tauri::command]
+fn save_set(title: String, json: String) -> Result<String, String> {
+    let proj_dirs = match get_project_dir() {
+        Err(e) => return Err(e),
+        Ok(data) => data,
+    };
+    let sets_folder_path = Path::new(&proj_dirs.data_dir()).join("sets");
+    if !sets_folder_path.is_dir() {
+        match fs::create_dir(sets_folder_path) {
+            Err(e) => return Err(format!("Error while creating sets dir: {e}")),
+            Ok(dir) => dir,
+        };
+    }
+    let set_file_path = Path::new(&proj_dirs.data_dir())
+        .join("sets")
+        .join(format!("{title}.tl"));
+
+    match fs::write(set_file_path, json) {
+        Err(e) => return Err(format!("Error while writing set file: {e}")),
+        Ok(_data) => {
+            println!("LOG: saved set {title}.tl");
+            return Ok(format!("Saved set {title}.tl!"));
+        }
+    }
+}
+
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
             get_all_sets,
             get_file_content,
             save_settings,
-            get_settings
+            get_settings,
+            save_set
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

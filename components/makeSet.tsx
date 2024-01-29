@@ -7,13 +7,14 @@ import { Button } from '@/components/ui/button'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { ScrollArea } from '@/components/ui/scroll-area'
 import {LucideX } from 'lucide-react'
+import { toast } from '@/components/ui/use-toast'
 
 
 const FormSchema = z.object({
-	title:z.string().min(3).catch('untitled')
+	title:z.string().min(3)
 }).catchall(z.string())
 
-export function MakeSet(){
+export function MakeSet({setSetElements}:{setSetElements:(arg0:string[])=>void}){
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema)
 	})
@@ -27,7 +28,7 @@ export function MakeSet(){
 		<div className="form">
 			<Form {...form}>
 				<form className="flex flex-col gap-3" onSubmit={
-					form.handleSubmit(saveSet)
+					form.handleSubmit((formdata)=>saveSet(formdata,setSetElements))
 				}>
 					<FormField
 						defaultValue=''
@@ -103,8 +104,8 @@ interface Iformdata{
 	[questionAnswer:string]:string
 }
 
-function saveSet(formdata:Iformdata){
-	const title =formdata.title
+function saveSet(formdata:Iformdata, setSetElements: ((arg0: string[]) => void)){
+	const title =formdata['title']
 	delete formdata[title]
 	const questions: string[] = []
 	Object.keys(formdata).forEach((key)=>{
@@ -123,7 +124,22 @@ function saveSet(formdata:Iformdata){
 			json[questions[i]]=answers[i]
 		}
 	}
-
-	console.log('tjoem')
+	console.log(title)
 	console.log(json)
+	import('@tauri-apps/api/index').then((tauri)=>{
+		tauri.invoke<string>('save_set',{title:title,json:JSON.stringify(json)})
+			.then((msg)=>{
+				window.location.href='#grid'
+				import('@tauri-apps/api/index').then((tauri)=>{
+					tauri.invoke<string>('get_all_sets')
+						.then((setsString)=>{
+							const sets=setsString.split(',')
+							setSetElements(sets)
+						})
+						.catch((e)=>toast({variant:'destructive',title:'Error!',description:e}))})
+				toast({title:'Saved set!',description:msg})
+			})
+			.catch((e)=>toast({
+				variant:'destructive',title:'Error!',description:e
+			}))})
 }

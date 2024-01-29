@@ -1,9 +1,9 @@
 import { Card ,CardHeader,CardTitle} from '@/components/ui/card'
-import {useEffect, useState } from 'react'
+import {useEffect} from 'react'
 import { toast } from '@/components/ui/use-toast'
 
-export function SetGrid({setCurrentSet}:{setCurrentSet:(arg0: string)=>void}){
-	const [setElements,setSetElements]=useState([''])
+export function SetGrid({setCurrentSet,setElements,setSetElements}:{setCurrentSet:(arg0: string)=>void,setElements:string[],setSetElements:(arg0: string[])=>void}){
+	
 	useEffect(()=>{
 		import('@tauri-apps/api/index').then((tauri)=>{
 			tauri.invoke<string>('get_all_sets').then((setsString)=>{
