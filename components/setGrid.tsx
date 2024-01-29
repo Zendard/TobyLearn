@@ -1,5 +1,6 @@
 import { Card ,CardHeader,CardTitle} from '@/components/ui/card'
 import {useEffect, useState } from 'react'
+import { toast } from '@/components/ui/use-toast'
 
 export function SetGrid({setCurrentSet}:{setCurrentSet:(arg0: string)=>void}){
 	const [setElements,setSetElements]=useState([''])
@@ -8,7 +9,7 @@ export function SetGrid({setCurrentSet}:{setCurrentSet:(arg0: string)=>void}){
 			tauri.invoke<string>('get_all_sets').then((setsString)=>{
 				const sets=setsString.split(',')
 				setSetElements(sets)
-			}).catch(console.log)})},[])
+			}).catch((e)=>toast({variant:'destructive',title:'Error!',description:e}))})},[])
 	if(setElements.length<=0 || setElements[0]=='' || !setElements){
 		return (<h1 className='text-3xl'>Geen sets gevonden</h1>)
 	}

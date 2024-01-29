@@ -151,19 +151,19 @@
 		@apply bg-background text-foreground;
 	}
 
-	main {
-		scroll-snap-type: y mandatory;
+	html {
+		scroll-behavior: smooth;
+		scroll-snap-type: both mandatory;
+		overflow: hidden;
+	}
+
+	#choose-set {
+		width: 200vw;
 	}
 
 	section {
 		scroll-snap-align: center;
-	}
-
-	html {
-		scroll-behavior: smooth;
-	}
-
-	section {
+		scroll-snap-stop: always;
 		display: flex;
 		gap: 1.5rem;
 		flex-direction: column;
@@ -171,6 +171,19 @@
 		justify-content: center;
 		height: 100vh;
 		position: relative;
+	}
+
+	.formScroll {
+		height: 60dvh;
+		padding: 1rem;
+	}
+
+	.formScroll>div {
+		mask-image: linear-gradient(0deg, transparent 0%, black 20%, black 80%, transparent 100%);
+	}
+
+	.formScroll>div>div {
+		padding: 5rem 0rem;
 	}
 
 	Button.correct {

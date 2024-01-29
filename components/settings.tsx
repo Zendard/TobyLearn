@@ -56,7 +56,9 @@ export function Settings({settings,setSettings}:{settings:Isettings,setSettings:
 
 	return(
 		<Sheet>
-			<SheetTrigger  className='absolute top-10 right-10 duration-100'><SettingsIcon /></SheetTrigger>
+			<SheetTrigger  className='absolute top-10 right-10 duration-100'><Button variant={'ghost'} asChild>
+				<SettingsIcon />
+			</Button></SheetTrigger>
 			<SheetContent className='flex flex-col h-full'>
 				<SheetHeader>
 					<SheetTitle>Settings</SheetTitle>
