@@ -9,7 +9,6 @@ import { useTheme } from 'next-themes'
 import { toast, useToast } from '@/components/ui/use-toast'
 import { ArrowLeft } from 'lucide-react'
 import { MakeSet } from '@/components/makeSet'
-import { tauri } from '@tauri-apps/api'
 
 
 export interface Isettings{
