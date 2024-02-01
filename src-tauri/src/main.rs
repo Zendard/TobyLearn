@@ -167,6 +167,30 @@ fn delete_set(set_name: String) -> Result<String, String> {
     }
 }
 
+use tauri::api::dialog::blocking::FileDialogBuilder;
+#[tauri::command]
+async fn import_set() -> Result<String, String> {
+    let proj_dirs = match get_project_dir() {
+        Err(e) => return Err(e),
+        Ok(data) => data,
+    };
+
+    let file_path = FileDialogBuilder::new()
+        .add_filter("TobyLearn Sets (.tl)", &["tl"])
+        .pick_file()
+        .unwrap();
+    match fs::copy(
+        &file_path,
+        proj_dirs
+            .data_dir()
+            .join("sets")
+            .join(file_path.file_name().unwrap()),
+    ) {
+        Err(e) => return Err(format!("Error while copying file: {e}")),
+        Ok(_data) => return Ok(format!("Imported {:?}", file_path)),
+    };
+}
+
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
@@ -175,7 +199,8 @@ fn main() {
             save_settings,
             get_settings,
             save_set,
-            delete_set
+            delete_set,
+            import_set
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

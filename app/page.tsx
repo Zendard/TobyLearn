@@ -6,9 +6,10 @@ import {Questioner} from '@/components/questioner'
 import {useEffect, useState} from 'react'
 import { Toaster } from '@/components/ui/toaster'
 import { useTheme } from 'next-themes'
-import { useToast } from '@/components/ui/use-toast'
+import { toast, useToast } from '@/components/ui/use-toast'
 import { ArrowLeft } from 'lucide-react'
 import { MakeSet } from '@/components/makeSet'
+import { tauri } from '@tauri-apps/api'
 
 
 export interface Isettings{
@@ -51,6 +52,7 @@ export default function Home() {
 					<Button asChild className='absolute bottom-10 right-10 bg-green-500 hover:bg-green-300'>
 						<a href='#make-grid'>+</a>
 					</Button>
+					<Button onClick={()=>importSet(setSetElements)} className='absolute bottom-10 right-10 bg-blue-500 hover:bg-blue-300'>Import</Button>
 				</section>
 				<section id='make-grid' className='w-screen h-screen'>
 					<Button asChild variant='ghost' className='absolute top-4 left-4'>
@@ -67,4 +69,17 @@ export default function Home() {
 			<Toaster />
 		</main>
 	)
+}
+
+function importSet(setSetElements:(arg0: string[])=>void){
+	import('@tauri-apps/api/index').then((tauri)=>{
+		tauri.invoke<string>('import_set').then((msg)=>{
+
+			tauri.invoke<string>('get_all_sets').then((setsString)=>{
+				const sets=setsString.split(',')
+				setSetElements(sets)
+			}).catch((e)=>toast({variant:'destructive',title:'Error!',description:e}))
+
+			toast({title:'Imported set',description:msg})
+		})})
 }
