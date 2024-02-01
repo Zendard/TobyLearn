@@ -42,14 +42,14 @@ export function Questioner({currentSet,settings,setCurrentSet}:{currentSet:strin
 				<>
 					<h1 id="question" className="text-7xl text-center">{keyArray[questionCounter]}</h1>
 					<Form {...form}>
-						<form className="flex gap-3" onSubmit={
+						<form className="flex gap-3 justify-between" onSubmit={
 							form.handleSubmit((data)=>checkAnswer(questionCounter,fileContent,data,form,setButtonClass,setFileContent,setQuestionCounter,keyArray,settings,setCurrentSet))
 						}>
 							<FormField
 								control={form.control}
 								name="answer"
 								render={({ field }) => (
-									<FormItem>
+									<FormItem className='w-full'>
 										<FormControl>
 											<Input placeholder="Antwoord" {...field} />
 										</FormControl>
@@ -59,7 +59,10 @@ export function Questioner({currentSet,settings,setCurrentSet}:{currentSet:strin
 							<Button className={buttonClass}>Ok</Button>
 						</form>
 					</Form>
-					<Progress value={(initialLength-Object.keys(fileContent).length)/initialLength*100} />
+					<div className='flex justify-between gap-3 items-center'>
+						<Progress value={(initialLength-Object.keys(fileContent).length)/initialLength*100} />
+						<h1 className=' text-center align-middle'>{Math.round((initialLength-Object.keys(fileContent).length)/initialLength*10000)/100}%</h1>
+					</div>
 				</>
 				:
 				<>
