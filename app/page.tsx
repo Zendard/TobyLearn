@@ -63,7 +63,7 @@ export default function Home() {
 			</section>
 			<section id='questioner'>
 				<Button asChild variant='ghost' className='absolute top-4 left-4'><a href="#grid"><ArrowLeft /></a></Button>
-				<Questioner currentSet={currentSet} settings={settings}></Questioner>
+				<Questioner currentSet={currentSet} settings={settings} setCurrentSet={setCurrentSet}></Questioner>
 			</section>
 			<Toaster />
 		</main>

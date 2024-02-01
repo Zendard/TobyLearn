@@ -9,7 +9,7 @@ import { useToast } from './ui/use-toast'
 import { Isettings } from '@/app/page'
 import { Progress } from '@/components/ui/progress'
 
-export function Questioner({currentSet,settings}:{currentSet:string,settings:Isettings}){
+export function Questioner({currentSet,settings,setCurrentSet}:{currentSet:string,settings:Isettings,setCurrentSet:(arg0:string)=>void}){
 	const [fileContent,setFileContent]=useState(Object)
 	const [keyArray,setKeyArray]=useState([''])
 	const [initialLength,setInitialLength]=useState(0)
@@ -43,7 +43,7 @@ export function Questioner({currentSet,settings}:{currentSet:string,settings:Ise
 					<h1 id="question" className="text-7xl text-center">{keyArray[questionCounter]}</h1>
 					<Form {...form}>
 						<form className="flex gap-3" onSubmit={
-							form.handleSubmit((data)=>checkAnswer(questionCounter,fileContent,data,form,setButtonClass,setFileContent,setQuestionCounter,keyArray,settings))
+							form.handleSubmit((data)=>checkAnswer(questionCounter,fileContent,data,form,setButtonClass,setFileContent,setQuestionCounter,keyArray,settings,setCurrentSet))
 						}>
 							<FormField
 								control={form.control}
@@ -101,13 +101,14 @@ const FormSchema = z.object({
 	answer: z.string(),
 })
 
-function checkAnswer(questionCounter:number,fileContent:{[question:string]:string},data: z.infer<typeof FormSchema>,form: UseFormReturn<{ answer: string }>,setButtonClass: Dispatch<SetStateAction<string>>,setFileContent: Dispatch<SetStateAction<{ [question:string]: string }>>,setQuestionCounter: { (value: SetStateAction<number>): void; (arg0: number): void },keyArray: (string | number)[],settings:Isettings){
+function checkAnswer(questionCounter:number,fileContent:{[question:string]:string},data: z.infer<typeof FormSchema>,form: UseFormReturn<{ answer: string }>,setButtonClass: Dispatch<SetStateAction<string>>,setFileContent: Dispatch<SetStateAction<{ [question:string]: string }>>,setQuestionCounter: { (value: SetStateAction<number>): void; (arg0: number): void },keyArray: (string | number)[],settings:Isettings,setCurrentSet:(arg0:string)=>void){
 	if(data.answer == fileContent[keyArray[questionCounter]] || (!settings.caseSensitive && data.answer.toLowerCase() == fileContent[keyArray[questionCounter]].toLowerCase())){
 		const newObject=fileContent
 		delete newObject[keyArray[questionCounter]]
 		setFileContent(newObject)
 		setButtonClass('correct')
 		setTimeout(()=>setButtonClass(''),1000)
+		if(Object.keys(fileContent).length<=0){setCurrentSet('')}
 	}else{
 		setButtonClass('wrong')
 		setTimeout(()=>setButtonClass(''),1000)
