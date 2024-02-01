@@ -7,3 +7,4 @@ A simple learning helper made with tauri as an alternative to quizlet.
 - Drag and drop sets
 - Set finish screen
 - Progress bar and percentage
+- Logo
