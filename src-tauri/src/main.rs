@@ -179,13 +179,13 @@ async fn import_set() -> Result<String, String> {
         .add_filter("TobyLearn Sets (.tl)", &["tl"])
         .pick_file()
         .unwrap();
-    match fs::copy(
-        &file_path,
-        proj_dirs
-            .data_dir()
-            .join("sets")
-            .join(file_path.file_name().unwrap()),
-    ) {
+
+    let file_destination = proj_dirs
+        .data_dir()
+        .join("sets")
+        .join(file_path.file_name().unwrap());
+
+    match fs::copy(&file_path, file_destination) {
         Err(e) => return Err(format!("Error while copying file: {e}")),
         Ok(_data) => return Ok(format!("Imported {:?}", file_path)),
     };
