@@ -56,7 +56,7 @@
 		"updater": {
 			"active": true,
 			"endpoints": [
-				"https://releases.myapp.com/{{target}}/{{arch}}/{{current_version}}"
+				"https://raw.githubusercontent.com/Zendard/TobyLearn/main/version-updater.json"
 			],
 			"dialog": true,
 			"pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDJGM0YzRDZBRjIxNUQzQUEKUldTcTB4WHlhajAvTDlMTUorTTZPYXFyaHhUeE12eGQyQjIvZUFQbGNrVmZRZEpKK0Nvak1sd2EK",
