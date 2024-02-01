@@ -59,13 +59,14 @@ export function Questioner({currentSet,settings}:{currentSet:string,settings:Ise
 							<Button className={buttonClass}>Ok</Button>
 						</form>
 					</Form>
+					<Progress value={(initialLength-Object.keys(fileContent).length)/initialLength*100} />
 				</>
 				:
 				<>
 					<h1 className='text-7xl text-center font-bold'>Finished set!</h1>
+					<Button asChild className=' w-fit m-auto'><a href="#grid">Choose another set</a></Button>
 				</>
 			}
-			<Progress value={(initialLength-Object.keys(fileContent).length)/initialLength*100} />
 		</div>
 	)
 }
