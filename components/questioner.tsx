@@ -7,14 +7,15 @@ import { UseFormReturn, useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { useToast } from './ui/use-toast'
 import { Isettings } from '@/app/page'
+import { Progress } from '@/components/ui/progress'
 
 export function Questioner({currentSet,settings}:{currentSet:string,settings:Isettings}){
 	const [fileContent,setFileContent]=useState(Object)
 	const [keyArray,setKeyArray]=useState([''])
+	const [initialLength,setInitialLength]=useState(0)
 	const {toast}=useToast()
-
 	useEffect(()=>{
-		GetSet(currentSet,setFileContent,setKeyArray,toast,settings?.randomizeQuestions)
+		GetSet(currentSet,setFileContent,setKeyArray,toast,settings?.randomizeQuestions,setInitialLength)
 	},[currentSet])
 
 	const [questionCounter,setQuestionCounter]=useState(0)
@@ -37,29 +38,38 @@ export function Questioner({currentSet,settings}:{currentSet:string,settings:Ise
 	
 	return(
 		<div className="questioner flex flex-col gap-5">
-			<h1 id="question" className="text-7xl text-center">{keyArray[questionCounter]}</h1>
-			<Form {...form}>
-				<form className="flex gap-3" onSubmit={
-					form.handleSubmit((data)=>checkAnswer(questionCounter,fileContent,data,form,setButtonClass,setFileContent,setQuestionCounter,keyArray,settings))
-				}>
-					<FormField
-						control={form.control}
-						name="answer"
-						render={({ field }) => (
-							<FormItem>
-								<FormControl>
-									<Input placeholder="Antwoord" {...field} />
-								</FormControl>
-							</FormItem>
-						)}
-					/>
-					<Button className={buttonClass}>Ok</Button>
-				</form>
-			</Form>
+			{Object.keys(fileContent).length>0 ?
+				<>
+					<h1 id="question" className="text-7xl text-center">{keyArray[questionCounter]}</h1>
+					<Form {...form}>
+						<form className="flex gap-3" onSubmit={
+							form.handleSubmit((data)=>checkAnswer(questionCounter,fileContent,data,form,setButtonClass,setFileContent,setQuestionCounter,keyArray,settings))
+						}>
+							<FormField
+								control={form.control}
+								name="answer"
+								render={({ field }) => (
+									<FormItem>
+										<FormControl>
+											<Input placeholder="Antwoord" {...field} />
+										</FormControl>
+									</FormItem>
+								)}
+							/>
+							<Button className={buttonClass}>Ok</Button>
+						</form>
+					</Form>
+				</>
+				:
+				<>
+					<h1 className='text-7xl text-center font-bold'>Finished set!</h1>
+				</>
+			}
+			<Progress value={(initialLength-Object.keys(fileContent).length)/initialLength*100} />
 		</div>
 	)
 }
-function GetSet(currentSet:string, setFileContent: Dispatch<SetStateAction<{[question:string]:string}>>, setKeyArray: (arg0: string[])=>void,toast: ((arg0: { variant: 'destructive'; title: string; description: string }) => void),randomizeQuestions:boolean){
+function GetSet(currentSet:string, setFileContent: Dispatch<SetStateAction<{[question:string]:string}>>, setKeyArray: (arg0: string[])=>void,toast: ((arg0: { variant: 'destructive'; title: string; description: string }) => void),randomizeQuestions:boolean,setInitialLength:(arg0: number)=>void){
 	if (currentSet.length<=0) return
 	import('@tauri-apps/api/index').then((tauri)=>{
 		tauri.invoke<string>('get_file_content',{'fileString':currentSet+'.tl'}).then((fileContent)=>{
@@ -70,11 +80,14 @@ function GetSet(currentSet:string, setFileContent: Dispatch<SetStateAction<{[que
 				setKeyArray(Object.keys(JSONFile))
 			}
 			setFileContent(JSONFile)
-		}).catch((e)=>toast({
-			variant:'destructive',
-			title: 'Error!',
-			description: e,
-		}))
+			setInitialLength(Object.keys(JSONFile).length)
+		}).catch((e)=>{
+			toast({
+				variant:'destructive',
+				title: 'Error!',
+				description: e,
+			})
+		})
 	})
 }
 
