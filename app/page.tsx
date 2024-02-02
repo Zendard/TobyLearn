@@ -51,7 +51,7 @@ export default function Home() {
 					<Button asChild className='absolute bottom-10 right-10 bg-green-500 hover:bg-green-300'>
 						<a href='#make-grid'>+</a>
 					</Button>
-					<Button onClick={()=>importSet(setSetElements)} className='absolute bottom-10 right-10 bg-blue-500 hover:bg-blue-300'>Import</Button>
+					<Button onClick={()=>importSet(setSetElements)} className='absolute bottom-10 right-24 bg-blue-500 hover:bg-blue-300'>Import</Button>
 				</section>
 				<section id='make-grid' className='w-screen h-screen'>
 					<Button asChild variant='ghost' className='absolute top-4 left-4'>
