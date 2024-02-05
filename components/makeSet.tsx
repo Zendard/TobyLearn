@@ -1,5 +1,5 @@
 import * as z from 'zod'
-import { Form, FormControl, FormField, FormItem } from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import {UseFormReturn, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Input } from '@/components/ui/input'
@@ -11,7 +11,7 @@ import { toast } from '@/components/ui/use-toast'
 
 
 const FormSchema = z.object({
-	title:z.string().min(3)
+	title:z.string().regex(/(\w+\s*)+/i,{message:'Only letters and numbers allowed'})
 }).catchall(z.string())
 
 export function MakeSet({setSetElements}:{setSetElements:(arg0:string[])=>void}){
@@ -35,10 +35,11 @@ export function MakeSet({setSetElements}:{setSetElements:(arg0:string[])=>void})
 						control={form.control}
 						name="title"
 						render={({ field }) => (
-							<FormItem>
+							<FormItem className=' h-10'>
 								<FormControl>
 									<Input placeholder="Set title" {...field} />
 								</FormControl>
+								<FormMessage />
 							</FormItem>
 						)}
 					/>
@@ -77,6 +78,7 @@ function fieldElement(counter:number, last:boolean, setItemCounter: { (value: Se
 							}
 							} {...field} />
 						</FormControl>
+						<FormMessage />
 					</FormItem>
 				)}
 			/>
@@ -89,6 +91,7 @@ function fieldElement(counter:number, last:boolean, setItemCounter: { (value: Se
 						<FormControl>
 							<Input placeholder="Answer" {...field} />
 						</FormControl>
+						<FormMessage />
 					</FormItem>
 				)}
 			/>
