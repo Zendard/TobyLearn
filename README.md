@@ -1,10 +1,13 @@
 # TobyLearn
 A simple learning helper made with tauri as an alternative to quizlet.
 
-## Planned features
+## Features
 - Import sets
+- Create sets with GUI
+- Learn sets
+- Multiple themes
+- Basic settings (Case sensitivity, Randomize questions)
+
+## Planned features
 - More settings
 - Drag and drop sets
-- Set finish screen
-- Progress bar and percentage
-- Logo
