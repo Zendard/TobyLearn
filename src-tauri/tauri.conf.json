@@ -8,7 +8,7 @@
 	},
 	"package": {
 		"productName": "tobylearn",
-		"version": "1.1.1"
+		"version": "1.1.2"
 	},
 	"tauri": {
 		"allowlist": {
@@ -33,36 +33,13 @@
 				"icons/icon.ico"
 			],
 			"identifier": "org.zendard.tobylearn",
-			"longDescription": "",
-			"macOS": {
-				"entitlements": null,
-				"exceptionDomain": "",
-				"frameworks": [],
-				"providerShortName": null,
-				"signingIdentity": null
-			},
+			"longDescription": "A simple, easy learning helper which allows you to create sets and let the program question you to help you learn for tests etc.",
 			"resources": [],
-			"shortDescription": "",
+			"shortDescription": "A simple learning helper made with tauri",
 			"targets": "all",
-			"windows": {
-				"certificateThumbprint": null,
-				"digestAlgorithm": "sha256",
-				"timestampUrl": ""
-			}
 		},
 		"security": {
 			"csp": null
-		},
-		"updater": {
-			"active": true,
-			"endpoints": [
-				"https://raw.githubusercontent.com/Zendard/TobyLearn/main/version-updater.json"
-			],
-			"dialog": true,
-			"pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDJGM0YzRDZBRjIxNUQzQUEKUldTcTB4WHlhajAvTDlMTUorTTZPYXFyaHhUeE12eGQyQjIvZUFQbGNrVmZRZEpKK0Nvak1sd2EK",
-			"windows": {
-				"installMode": "passive"
-			}
 		},
 		"windows": [
 			{
