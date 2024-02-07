@@ -210,7 +210,7 @@ async fn check_update() {
         .unwrap();
     let request = http::HttpRequestBuilder::new(
         "GET",
-        "https://raw.githubusercontent.com/Zendard/TobyLearn/main/version-updater.json",
+        "https://raw.githubusercontent.com/Zendard/TobyLearn/main/newest.version",
     )
     .unwrap()
     .response_type(http::ResponseType::Text);
@@ -218,7 +218,7 @@ async fn check_update() {
     if let Ok(response) = client.send(request).await {
         let response = response;
         let data_raw = &response.read().await.unwrap();
-        let data: Vec<&str> = data_raw.data.as_str().unwrap().split(",").collect();
+        let data: Vec<&str> = data_raw.data.as_str().unwrap().split("\n").collect();
         println!("got response: {:?}", data);
         let version = data[0];
         dialog::MessageDialogBuilder::new(
