@@ -11,3 +11,4 @@ A simple learning helper made with tauri as an alternative to quizlet.
 ## Planned features
 - More settings
 - Drag and drop sets
+- Export sets
