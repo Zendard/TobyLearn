@@ -2,11 +2,9 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 extern crate directories;
 use directories::ProjectDirs;
-use std::error::Error;
 use std::fs;
 use std::path::Path;
 use std::time::Duration;
-use tauri::api::http::{Client, HttpRequestBuilder};
 use tauri::api::{dialog, http};
 
 fn get_project_dir() -> Result<ProjectDirs, String> {
@@ -222,6 +220,8 @@ async fn check_update() -> Result<String, String> {
         Err(e) => return Err(format!("Error while reading version file: {e}")),
         Ok(data) => data,
     };
+
+    println!("Current: {} | Newest: {}", current_version, newest_version);
 
     if current_version >= newest_version.to_string() {
         return Ok("Already newest version".to_string());
