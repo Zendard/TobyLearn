@@ -213,6 +213,7 @@ async fn check_update() -> Result<String, String> {
         request("https://raw.githubusercontent.com/Zendard/TobyLearn/main/newest.version").await;
     let data: Vec<&str> = data_string.split("\n").collect();
     let newest_version = data[0];
+    let changelog = data[1];
 
     println!("Current: {} | Newest: {}", current_version, newest_version);
 
@@ -222,7 +223,7 @@ async fn check_update() -> Result<String, String> {
 
     dialog::MessageDialogBuilder::new(
         "New version!",
-        format!("Version {newest_version} is available!"),
+        format!("Version {newest_version} is available!\n\nChangelog:\n{changelog}"),
     )
     .buttons(dialog::MessageDialogButtons::OkCancelWithLabels(
         "Download".to_string(),
