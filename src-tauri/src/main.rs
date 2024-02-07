@@ -4,6 +4,8 @@ extern crate directories;
 use directories::ProjectDirs;
 use std::fs;
 use std::path::Path;
+use std::time::Duration;
+use tauri::api::{dialog, http};
 
 fn get_project_dir() -> Result<ProjectDirs, String> {
     let proj_dirs = ProjectDirs::from("org", "zendard", "tobyLearn");
@@ -178,7 +180,7 @@ fn delete_set(set_name: String) -> Result<String, String> {
 
 use tauri::api::dialog::blocking::FileDialogBuilder;
 #[tauri::command]
-async fn import_set() -> Result<String, String> {
+fn import_set() -> Result<String, String> {
     let proj_dirs = match get_project_dir() {
         Err(e) => return Err(e),
         Ok(data) => data,
@@ -200,6 +202,38 @@ async fn import_set() -> Result<String, String> {
     };
 }
 
+#[tauri::command]
+async fn check_update() {
+    let client = http::ClientBuilder::new()
+        .connect_timeout(Duration::from_millis(5000))
+        .build()
+        .unwrap();
+    let request = http::HttpRequestBuilder::new(
+        "GET",
+        "https://raw.githubusercontent.com/Zendard/TobyLearn/main/version-updater.json",
+    )
+    .unwrap()
+    .response_type(http::ResponseType::Text);
+
+    if let Ok(response) = client.send(request).await {
+        let response = response;
+        let data_raw = &response.read().await.unwrap();
+        let data: Vec<&str> = data_raw.data.as_str().unwrap().split(",").collect();
+        println!("got response: {:?}", data);
+        let version = data[0];
+        dialog::MessageDialogBuilder::new(
+            "New version!",
+            format!("Version {version} is available"),
+        )
+        .buttons(dialog::MessageDialogButtons::Ok)
+        .kind(dialog::MessageDialogKind::Info)
+        .show(|_| {});
+    } else {
+        println!("Something Happened!");
+    }
+    println!("Check_update finished")
+}
+
 fn main() {
     tauri::Builder::default()
         .invoke_handler(tauri::generate_handler![
@@ -209,7 +243,8 @@ fn main() {
             get_settings,
             save_set,
             delete_set,
-            import_set
+            import_set,
+            check_update
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

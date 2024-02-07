@@ -15,6 +15,13 @@
 			"all": false,
 			"dialog": {
 				"all": true
+			},
+			"http": {
+				"all": false,
+				"request": true,
+				"scope": [
+					"https://raw.githubusercontent.com/Zendard/TobyLearn/*"
+				]
 			}
 		},
 		"bundle": {
@@ -36,7 +43,11 @@
 			"longDescription": "A simple, easy learning helper which allows you to create sets and let the program question you to help you learn for tests etc.",
 			"resources": [],
 			"shortDescription": "A simple learning helper made with tauri",
-			"targets": "all",
+			"targets": [
+				"appimage",
+				"deb",
+				"nsis"
+			]
 		},
 		"security": {
 			"csp": null

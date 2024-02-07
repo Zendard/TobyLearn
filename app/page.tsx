@@ -23,9 +23,11 @@ export default function Home() {
 	const [currentSet,setCurrentSet]=useState('')
 	const [settings,setSettings]=useState<Isettings>({accentColor:'none',randomizeQuestions:true,caseSensitive:true})
 	const { setTheme } = useTheme()
+
 	useEffect(()=>{
-		import('@tauri-apps/api').then((tauri)=>{
-			tauri.invoke<string>('get_settings').then((settings)=>{setSettings(JSON.parse(settings))}).catch((e)=>toast({variant:'destructive',title:'Error!',description:e}))
+		import('@tauri-apps/api').then(function (tauri) {
+			tauri.invoke<string>('get_settings').then((settings) => { setSettings(JSON.parse(settings)) }).catch((e) => toast({ variant: 'destructive', title: 'Error!', description: e }))
+			tauri.invoke('check_update')
 		})
 	},[])
 	useEffect(()=>{
