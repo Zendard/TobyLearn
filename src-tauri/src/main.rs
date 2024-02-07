@@ -199,27 +199,20 @@ fn import_set() -> Result<String, String> {
 #[tauri::command]
 async fn check_update() -> Result<String, String> {
     let proj_dirs = match get_project_dir() {
-        Err(e) => return Err(e),
+        Err(e) => return Err(e.into()),
         Ok(data) => data,
     };
     let version_file_path = proj_dirs.config_dir().join("current.version");
-
-    let data_string =
-        request("https://raw.githubusercontent.com/Zendard/TobyLearn/main/newest.version").await;
-    let data: Vec<&str> = data_string.split("\n").collect();
-    let newest_version = data[0];
-
-    if !version_file_path.is_file() {
-        match fs::write(&version_file_path, newest_version) {
-            Err(e) => return Err(format!("Error while writing version file: {e}")),
-            Ok(data) => data,
-        };
-    }
 
     let current_version = match fs::read_to_string(&version_file_path) {
         Err(e) => return Err(format!("Error while reading version file: {e}")),
         Ok(data) => data,
     };
+
+    let data_string =
+        request("https://raw.githubusercontent.com/Zendard/TobyLearn/main/newest.version").await;
+    let data: Vec<&str> = data_string.split("\n").collect();
+    let newest_version = data[0];
 
     println!("Current: {} | Newest: {}", current_version, newest_version);
 
@@ -268,11 +261,27 @@ async fn request(url: &str) -> String {
         .as_str()
         .unwrap()
         .to_owned();
+    println!("Data: {:?}", data);
     return data;
 }
 
 fn main() {
     tauri::Builder::default()
+        .setup(|app| {
+            let proj_dirs = match get_project_dir() {
+                Err(e) => return Err(e.into()),
+                Ok(data) => data,
+            };
+            let version_file_path = proj_dirs.config_dir().join("current.version");
+
+            let current_version = app.package_info().version.to_string();
+
+            match fs::write(&version_file_path, current_version) {
+                Err(e) => return Err(e.into()),
+                Ok(data) => data,
+            };
+            Ok(())
+        })
         .invoke_handler(tauri::generate_handler![
             get_all_sets,
             get_file_content,
