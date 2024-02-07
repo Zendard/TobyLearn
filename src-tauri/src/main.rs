@@ -2,9 +2,11 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 extern crate directories;
 use directories::ProjectDirs;
+use std::error::Error;
 use std::fs;
 use std::path::Path;
 use std::time::Duration;
+use tauri::api::http::{Client, HttpRequestBuilder};
 use tauri::api::{dialog, http};
 
 fn get_project_dir() -> Result<ProjectDirs, String> {
@@ -78,12 +80,11 @@ fn get_file_content(file_string: String) -> Result<String, String> {
     let sets_folder_path = Path::new(&proj_dirs.data_dir()).join("sets");
 
     let file_path = sets_folder_path.join(&file_string);
-    if !file_path.is_file() {
-        let file_path_error = file_path.as_os_str().to_str().unwrap();
-        return Err(format!("Error while reading file {file_path_error}"));
-    }
 
-    let file_content: String = String::from_utf8(fs::read(file_path).unwrap()).unwrap();
+    let file_content = match fs::read_to_string(file_path) {
+        Err(e) => return Err(format!("Error while reading file: {e}")),
+        Ok(data) => data,
+    };
     Ok(file_content)
 }
 
@@ -117,16 +118,11 @@ fn get_settings() -> Result<String, String> {
         }
     }
 
-    let settings = match fs::read(settings_file) {
+    let settings = match fs::read_to_string(settings_file) {
         Err(e) => return Err(format!("Error while reading settings.json: {e}")),
         Ok(data) => data,
     };
-
-    let settings_string = match String::from_utf8(settings) {
-        Err(e) => return Err(format!("Error while parsing settings.json: {e}")),
-        Ok(data) => data,
-    };
-    return Ok(settings_string);
+    return Ok(settings);
 }
 
 #[tauri::command]
@@ -203,47 +199,76 @@ fn import_set() -> Result<String, String> {
 }
 
 #[tauri::command]
-async fn check_update() {
+async fn check_update() -> Result<String, String> {
+    let proj_dirs = match get_project_dir() {
+        Err(e) => return Err(e),
+        Ok(data) => data,
+    };
+    let version_file_path = proj_dirs.config_dir().join("current.version");
+
+    let data_string =
+        request("https://raw.githubusercontent.com/Zendard/TobyLearn/main/newest.version").await;
+    let data: Vec<&str> = data_string.split("\n").collect();
+    let newest_version = data[0];
+
+    if !version_file_path.is_file() {
+        match fs::write(&version_file_path, newest_version) {
+            Err(e) => return Err(format!("Error while writing version file: {e}")),
+            Ok(data) => data,
+        };
+    }
+
+    let current_version = match fs::read_to_string(&version_file_path) {
+        Err(e) => return Err(format!("Error while reading version file: {e}")),
+        Ok(data) => data,
+    };
+
+    if current_version >= newest_version.to_string() {
+        return Ok("Already newest version".to_string());
+    }
+
+    dialog::MessageDialogBuilder::new(
+        "New version!",
+        format!("Version {newest_version} is available!"),
+    )
+    .buttons(dialog::MessageDialogButtons::OkCancelWithLabels(
+        "Download".to_string(),
+        "Cancel".to_string(),
+    ))
+    .kind(dialog::MessageDialogKind::Info)
+    .show(|download| {
+        if !download {
+            return;
+        }
+
+        match open::that("https://github.com/Zendard/TobyLearn/releases") {
+            Err(e) => println!("Error while opening link: {:?}", e),
+            Ok(data) => data,
+        };
+    });
+    Ok("Checked update".to_string())
+}
+
+async fn request(url: &str) -> String {
     let client = http::ClientBuilder::new()
         .connect_timeout(Duration::from_millis(5000))
         .build()
         .unwrap();
-    let request = http::HttpRequestBuilder::new(
-        "GET",
-        "https://raw.githubusercontent.com/Zendard/TobyLearn/main/newest.version",
-    )
-    .unwrap()
-    .response_type(http::ResponseType::Text);
+    let request = http::HttpRequestBuilder::new("GET", url)
+        .unwrap()
+        .response_type(http::ResponseType::Text);
 
-    if let Ok(response) = client.send(request).await {
-        let response = response;
-        let data_raw = &response.read().await.unwrap();
-        let data: Vec<&str> = data_raw.data.as_str().unwrap().split("\n").collect();
-        println!("got response: {:?}", data);
-        let version = data[0];
-        dialog::MessageDialogBuilder::new(
-            "New version!",
-            format!("Version {version} is available!"),
-        )
-        .buttons(dialog::MessageDialogButtons::OkCancelWithLabels(
-            "Download".to_string(),
-            "Cancel".to_string(),
-        ))
-        .kind(dialog::MessageDialogKind::Info)
-        .show(|download| {
-            if !download {
-                return;
-            }
-
-            match open::that("https://github.com/Zendard/TobyLearn/releases") {
-                Err(e) => println!("Error while opening link: {:?}", e),
-                Ok(data) => data,
-            };
-        });
-    } else {
-        println!("Something Happened!");
-    }
-    println!("Check_update finished")
+    let response = client.send(request).await;
+    let data: String = response
+        .unwrap()
+        .read()
+        .await
+        .unwrap()
+        .data
+        .as_str()
+        .unwrap()
+        .to_owned();
+    return data;
 }
 
 fn main() {
