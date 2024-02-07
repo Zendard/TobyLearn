@@ -223,11 +223,23 @@ async fn check_update() {
         let version = data[0];
         dialog::MessageDialogBuilder::new(
             "New version!",
-            format!("Version {version} is available"),
+            format!("Version {version} is available!"),
         )
-        .buttons(dialog::MessageDialogButtons::Ok)
+        .buttons(dialog::MessageDialogButtons::OkCancelWithLabels(
+            "Download".to_string(),
+            "Cancel".to_string(),
+        ))
         .kind(dialog::MessageDialogKind::Info)
-        .show(|_| {});
+        .show(|download| {
+            if !download {
+                return;
+            }
+
+            match open::that("https://github.com/Zendard/TobyLearn/releases") {
+                Err(e) => println!("Error while opening link: {:?}", e),
+                Ok(data) => data,
+            };
+        });
     } else {
         println!("Something Happened!");
     }
