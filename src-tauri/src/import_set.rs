@@ -11,8 +11,12 @@ pub fn import_set() -> Result<String, String> {
 
     let file_path = FileDialogBuilder::new()
         .add_filter("TobyLearn Sets (.tl)", &["tl"])
-        .pick_file()
-        .unwrap();
+        .pick_file();
+
+    if file_path.is_none() {
+        return Ok("Imported nothing".to_string());
+    }
+    let file_path = file_path.unwrap();
 
     let file_destination = proj_dirs
         .data_dir()
