@@ -27,6 +27,9 @@ use crate::import_set::import_set;
 mod check_update;
 use crate::check_update::check_update;
 
+mod export_set;
+use crate::export_set::export_set;
+
 use std::fs;
 
 fn main() {
@@ -54,7 +57,8 @@ fn main() {
             save_set,
             delete_set,
             import_set,
-            check_update
+            check_update,
+            export_set
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
