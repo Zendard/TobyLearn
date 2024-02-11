@@ -17,7 +17,7 @@ pub fn get_file_content(file_string: String) -> Result<String, String> {
     }
     let sets_folder_path = Path::new(&proj_dirs.data_dir()).join("sets");
 
-    let file_path = sets_folder_path.join(&file_string);
+    let file_path = sets_folder_path.join(file_string + ".tl");
 
     let file_content = match fs::read_to_string(file_path) {
         Err(e) => return Err(format!("Error while reading file: {e}")),
