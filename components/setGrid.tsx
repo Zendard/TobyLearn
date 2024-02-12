@@ -1,9 +1,10 @@
 import { Card ,CardContent,CardFooter,CardHeader,CardTitle} from '@/components/ui/card'
 import {useEffect} from 'react'
 import { toast } from '@/components/ui/use-toast'
-import { LucideShare, LucideX } from 'lucide-react'
+import { LucideMoreVertical, LucideShare, LucideTrash, LucideTrash2, LucideX } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTrigger } from '@/components/ui/dialog'
+import {DropdownMenu,DropdownMenuContent,DropdownMenuItem,DropdownMenuLabel,DropdownMenuSeparator,DropdownMenuTrigger,} from '@/components/ui/dropdown-menu'
 
 export function SetGrid({setCurrentSet,setElements,setSetElements}:{setCurrentSet:(arg0: string)=>void,setElements:string[],setSetElements:(arg0: string[])=>void}){
 	
@@ -21,14 +22,22 @@ export function SetGrid({setCurrentSet,setElements,setSetElements}:{setCurrentSe
 			{setElements.map((setName)=>{
 				return (
 					<Dialog key={'dialog-'+setName}>
-						<Card key={'card-'+setName} className="cursor-pointer hover:bg-white/10 w-full h-fit">
-							<CardHeader className='flex flex-row items-center justify-between gap-5'>
+						<Card key={'card-'+setName} className="cursor-pointer hover:bg-white/10 w-48 h-fit">
+							<CardHeader className='flex flex-row justify-between items-center'>
 								<CardTitle onClick={()=>{setCurrentSet(setName); window.location.href='#questioner'}} >{setName}</CardTitle>
-								<DialogTrigger asChild><Button className=' z-10' variant={'destructive'}><LucideX /></Button></DialogTrigger>
+								<DropdownMenu>
+									<DropdownMenuTrigger className='flex justify-end'><LucideMoreVertical/></DropdownMenuTrigger>
+									<DropdownMenuContent>
+										<DropdownMenuLabel>{setName}</DropdownMenuLabel>
+										<DropdownMenuItem className=' flex gap-3 text-md' onClick={()=>exportSet(setName)}><LucideShare size={'1.3em'}/>Export</DropdownMenuItem>
+										<DropdownMenuItem ><DialogTrigger  asChild><div className=' text-red-600 flex gap-3 text-md'><LucideTrash2 stroke='red' size={'1.3em'} /> Delete</div ></DialogTrigger></DropdownMenuItem>
+									</DropdownMenuContent>
+								</DropdownMenu>
 							</CardHeader>
-							<CardContent onClick={()=>{setCurrentSet(setName); window.location.href='#questioner'}} />
+							<CardContent onClick={()=>{setCurrentSet(setName); window.location.href='#questioner'}}>
+							</CardContent>
 							<CardFooter className='flex justify-end' onClick={()=>{setCurrentSet(setName); window.location.href='#questioner'}}>
-								<Button onClick={()=>exportSet(setName)}><LucideShare/></Button>
+								
 							</CardFooter>
 						</Card>
 						<DialogContent>
