@@ -153,7 +153,7 @@
 
 	html {
 		scroll-behavior: smooth;
-		scroll-snap-type: both mandatory;
+		/* scroll-snap-type: both mandatory; */
 		overflow: hidden;
 	}
 
@@ -162,8 +162,8 @@
 	}
 
 	section {
-		scroll-snap-align: center;
-		scroll-snap-stop: always;
+		/* scroll-snap-align: center;
+		scroll-snap-stop: always; */
 		display: flex;
 		gap: 1.5rem;
 		flex-direction: column;

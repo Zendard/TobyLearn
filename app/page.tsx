@@ -23,6 +23,7 @@ export default function Home() {
 	const [currentSet,setCurrentSet]=useState('')
 	const [settings,setSettings]=useState<Isettings>({accentColor:'none',randomizeQuestions:true,caseSensitive:true})
 	const { setTheme } = useTheme()
+	const [editSetContents,setEditSetContent]=useState<{[key:string]:string}>({'':''})
 
 	useEffect(()=>{
 		import('@tauri-apps/api').then(function (tauri) {
@@ -40,7 +41,7 @@ export default function Home() {
 				<Settings settings={settings} setSettings={setSettings}/>
 				<h1 className='text-8xl'>TobyLearn</h1>
 				<Button asChild>
-					<a href="#grid">Kies een Set</a>
+					<a href="#grid">Choose a set</a>
 				</Button>
 			</section>
 			<section id='choose-set' className='w-200vw flex justify-between flex-row'>
@@ -48,19 +49,16 @@ export default function Home() {
 					<Button asChild variant='ghost' className='absolute top-4 left-4'>
 						<a href="#start"><ArrowLeft /></a>
 					</Button>
-					<h1 className='absolute top-5 text-xl'>Kies een set</h1>
-					<SetGrid setCurrentSet={setCurrentSet} setElements={setElements} setSetElements={setSetElements}></SetGrid>
-					<Button asChild className='absolute bottom-10 right-10 bg-green-500 hover:bg-green-300'>
+					<h1 className='absolute top-5 text-xl'>Choose a set</h1>
+					<SetGrid setCurrentSet={setCurrentSet} setElements={setElements} setSetElements={setSetElements} setEditSetContent={setEditSetContent}></SetGrid>
+					<Button onClick={()=>{setEditSetContent({})}}  asChild className='absolute bottom-10 right-10 bg-green-500 hover:bg-green-300'>
 						<a href='#make-grid'>+</a>
 					</Button>
 					<Button onClick={()=>importSet(setSetElements)} className='absolute bottom-10 right-24 bg-blue-500 hover:bg-blue-300'>Import</Button>
 				</section>
 				<section id='make-grid' className='w-screen h-screen'>
-					<Button asChild variant='ghost' className='absolute top-4 left-4'>
-						<a href="#grid"><ArrowLeft /></a>
-					</Button>
 					<h1 className='absolute top-5 text-xl'>Make Set</h1>
-					<MakeSet setSetElements={setSetElements} />
+					<MakeSet setSetElements={setSetElements} defaultValues={editSetContents} title='' />
 				</section>
 			</section>
 			<section id='questioner'>

@@ -1,12 +1,12 @@
 import { Card ,CardContent,CardFooter,CardHeader,CardTitle} from '@/components/ui/card'
 import {useEffect} from 'react'
 import { toast } from '@/components/ui/use-toast'
-import { LucideMoreVertical, LucideShare, LucideTrash, LucideTrash2, LucideX } from 'lucide-react'
+import {LucideEdit2, LucideMoreVertical, LucideShare, LucideTrash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTrigger } from '@/components/ui/dialog'
 import {DropdownMenu,DropdownMenuContent,DropdownMenuItem,DropdownMenuLabel,DropdownMenuSeparator,DropdownMenuTrigger,} from '@/components/ui/dropdown-menu'
 
-export function SetGrid({setCurrentSet,setElements,setSetElements}:{setCurrentSet:(arg0: string)=>void,setElements:string[],setSetElements:(arg0: string[])=>void}){
+export function SetGrid({setCurrentSet,setElements,setSetElements,setEditSetContent}:{setCurrentSet:(arg0: string)=>void,setElements:string[],setSetElements:(arg0: string[])=>void,setEditSetContent:(arg0:{[key:string]:string})=>void}){
 	
 	useEffect(()=>{
 		import('@tauri-apps/api/index').then((tauri)=>{
@@ -26,17 +26,19 @@ export function SetGrid({setCurrentSet,setElements,setSetElements}:{setCurrentSe
 							<CardHeader className='flex flex-row justify-between items-center'>
 								<CardTitle onClick={()=>{setCurrentSet(setName); window.location.href='#questioner'}} >{setName}</CardTitle>
 								<DropdownMenu>
-									<DropdownMenuTrigger className='flex justify-end'><LucideMoreVertical/></DropdownMenuTrigger>
+									<DropdownMenuTrigger asChild className='flex justify-end'><Button className=' hover:bg-zinc-500' variant={'ghost'}><LucideMoreVertical/></Button></DropdownMenuTrigger>
 									<DropdownMenuContent>
 										<DropdownMenuLabel>{setName}</DropdownMenuLabel>
+										<DropdownMenuItem className=' flex gap-3 text-md' onSelectCapture={()=>editSet(setName,setEditSetContent)}><LucideEdit2 strokeWidth={3} size={'1.3em'}/><a href="#make-grid">Edit</a></DropdownMenuItem>
 										<DropdownMenuItem className=' flex gap-3 text-md' onClick={()=>exportSet(setName)}><LucideShare size={'1.3em'}/>Export</DropdownMenuItem>
+										<DropdownMenuSeparator />
 										<DropdownMenuItem ><DialogTrigger  asChild><div className=' text-red-600 flex gap-3 text-md'><LucideTrash2 stroke='red' size={'1.3em'} /> Delete</div ></DialogTrigger></DropdownMenuItem>
 									</DropdownMenuContent>
 								</DropdownMenu>
 							</CardHeader>
-							<CardContent onClick={()=>{setCurrentSet(setName); window.location.href='#questioner'}}>
+							<CardContent >
 							</CardContent>
-							<CardFooter className='flex justify-end' onClick={()=>{setCurrentSet(setName); window.location.href='#questioner'}}>
+							<CardFooter className='flex justify-end' >
 								
 							</CardFooter>
 						</Card>
@@ -56,7 +58,7 @@ export function SetGrid({setCurrentSet,setElements,setSetElements}:{setCurrentSe
 }
 
 function deleteSet(setName:string,setSetElements:(arg0:string[])=>void){
-	window.location.href='#grid'
+	// window.location.href='#grid'
 	import('@tauri-apps/api/index').then((tauri)=>{
 		tauri.invoke<string>('delete_set',{setName:setName}).then((msg)=>{
 			toast({title:'Deleted set',description:msg})
@@ -69,9 +71,19 @@ function deleteSet(setName:string,setSetElements:(arg0:string[])=>void){
 }
 
 function exportSet(setName:string){
-	window.location.href='#grid'
+	// window.location.href='#grid'
 	import('@tauri-apps/api/index').then((tauri)=>{
 		tauri.invoke<string>('export_set',{setName}).then((msg)=>toast({title:'Exported set',description:msg}))
 			.catch((e)=>{toast({variant:'destructive',title:'Error!',description:e})})
+	})
+}
+
+function editSet(setName:string,setEditSetContent:(arg0:{[key:string]:string})=>void){
+	import('@tauri-apps/api/index').then((tauri)=>{
+		tauri.invoke<string>('get_file_content',{fileString:setName}).then((setContent)=>{
+			// window.location.href='#make-grid'
+			console.log(window.location.href)
+			setEditSetContent(JSON.parse(setContent))
+		})
 	})
 }

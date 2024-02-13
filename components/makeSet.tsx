@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import {LucideX } from 'lucide-react'
+import {ArrowLeft, LucideX } from 'lucide-react'
 import { toast } from '@/components/ui/use-toast'
 
 
@@ -14,59 +14,69 @@ const FormSchema = z.object({
 	title:z.string().regex(/(\w+\s*)+/i,{message:'Only letters and numbers allowed'})
 }).catchall(z.string())
 
-export function MakeSet({setSetElements}:{setSetElements:(arg0:string[])=>void}){
+export function MakeSet({setSetElements,defaultValues,title}:{setSetElements:(arg0:string[])=>void,defaultValues:{[key:string]:string},title:string}){
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema)
 	})
 
-	const [itemCounter,setItemCounter]=useState(1)
+	const [itemCounter,setItemCounter]=useState(Object.keys(defaultValues).length+1)
 	const [fieldArray,setFieldArray]=useState([<div key={0}/>])
+
 	useEffect(()=>{
-		setFieldArray(generateFields(itemCounter,setItemCounter,form))
+		setItemCounter(Object.keys(defaultValues).length+1)
+	},[defaultValues])
+
+	useEffect(()=>{
+		setFieldArray(generateFields(itemCounter,setItemCounter,form,defaultValues))
 	},[itemCounter])
 	return(
-		<div className="form">
-			<Form {...form}>
-				<form className="flex flex-col gap-3" onSubmit={
-					form.handleSubmit((formdata)=>saveSet(formdata,setSetElements))
-				}>
-					<FormField
-						defaultValue=''
-						control={form.control}
-						name="title"
-						render={({ field }) => (
-							<FormItem className=' h-10'>
-								<FormControl>
-									<Input placeholder="Set title" {...field} />
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
-					<ScrollArea className='formScroll'>
-						<div className='p-4'>{fieldArray}</div>
-					</ScrollArea>
-					<Button>Ok</Button>
-				</form>
-			</Form>
-		</div>
+		<>
+			<Button onClick={()=>{form.reset(); setFieldArray([])}} asChild variant='ghost' className='absolute top-4 left-4'>
+				<a href="#grid"><ArrowLeft /></a>
+			</Button>
+			<div className="form">
+				<Form {...form}>
+					<form className="flex flex-col gap-3" onSubmit={
+						form.handleSubmit((formdata)=>saveSet(formdata,setSetElements))
+					}>
+						<FormField
+							defaultValue={title}
+							control={form.control}
+							name="title"
+							render={({ field }) => (
+								<FormItem className=' h-10'>
+									<FormControl>
+										<Input placeholder="Set title" {...field} />
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<ScrollArea className='formScroll'>
+							<div className='p-4'>{fieldArray}</div>
+						</ScrollArea>
+						<Button>Ok</Button>
+					</form>
+				</Form>
+			</div>
+		</>
 	)
 }
 
-function generateFields(itemCounter:number, setItemCounter: Dispatch<SetStateAction<number>>,form:UseFormReturn<z.objectOutputType<{title: z.ZodString;}, z.ZodString, 'strip'>, undefined>){
+function generateFields(itemCounter:number, setItemCounter: Dispatch<SetStateAction<number>>,form:UseFormReturn<z.objectOutputType<{title: z.ZodString;}, z.ZodString, 'strip'>, undefined>,defaultValues:{[key:string]:string}){
 	const itemArray=[]
 	for(let i=0;i<itemCounter-1;i++){
-		itemArray.push(fieldElement(i,false,setItemCounter,form))
+		itemArray.push(fieldElement(i,false,setItemCounter,form,defaultValues))
 	}
-	itemArray.push(fieldElement(itemCounter-1,true,setItemCounter,form))
+	itemArray.push(fieldElement(itemCounter-1,true,setItemCounter,form,{'':''}))
 	return itemArray
 }
 
-function fieldElement(counter:number, last:boolean, setItemCounter: { (value: SetStateAction<number>): void; (value: SetStateAction<number>): void },form:UseFormReturn<z.objectOutputType<{title: z.ZodString;}, z.ZodString, 'strip'>, undefined>){
+function fieldElement(counter:number, last:boolean, setItemCounter: { (value: SetStateAction<number>): void; (value: SetStateAction<number>): void },form:UseFormReturn<z.objectOutputType<{title: z.ZodString;}, z.ZodString, 'strip'>, undefined>,defaultValues:{[key:string]:string}){
 	return(
 		<fieldset className='flex gap-3 mt-3' key={counter}>
 			<FormField
-				defaultValue=''
+				defaultValue={Object.keys(defaultValues)[counter]}
 				control={form.control}
 				name={`q-${counter}`}
 				render={({ field }) => (
@@ -83,7 +93,7 @@ function fieldElement(counter:number, last:boolean, setItemCounter: { (value: Se
 				)}
 			/>
 			<FormField
-				defaultValue=''
+				defaultValue={defaultValues[Object.keys(defaultValues)[counter]]}
 				control={form.control}
 				name={`a-${counter}`}
 				render={({ field }) => (
