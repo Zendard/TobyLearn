@@ -24,6 +24,7 @@ export default function Home() {
 	const [settings,setSettings]=useState<Isettings>({accentColor:'none',randomizeQuestions:true,caseSensitive:true})
 	const { setTheme } = useTheme()
 	const [editSetContents,setEditSetContent]=useState<{[key:string]:string}>({'':''})
+	const [editSetTitle,setEditSetTitle]=useState('')
 
 	useEffect(()=>{
 		import('@tauri-apps/api').then(function (tauri) {
@@ -50,15 +51,15 @@ export default function Home() {
 						<a href="#start"><ArrowLeft /></a>
 					</Button>
 					<h1 className='absolute top-5 text-xl'>Choose a set</h1>
-					<SetGrid setCurrentSet={setCurrentSet} setElements={setElements} setSetElements={setSetElements} setEditSetContent={setEditSetContent}></SetGrid>
-					<Button onClick={()=>{setEditSetContent({})}}  asChild className='absolute bottom-10 right-10 bg-green-500 hover:bg-green-300'>
+					<SetGrid setCurrentSet={setCurrentSet} setElements={setElements} setSetElements={setSetElements} setEditSetContent={setEditSetContent} setEditSetTitle={setEditSetTitle}></SetGrid>
+					<Button onClick={()=>{setEditSetContent({}); setEditSetTitle('')}}  asChild className='absolute bottom-10 right-10 bg-green-500 hover:bg-green-300'>
 						<a href='#make-grid'>+</a>
 					</Button>
 					<Button onClick={()=>importSet(setSetElements)} className='absolute bottom-10 right-24 bg-blue-500 hover:bg-blue-300'>Import</Button>
 				</section>
 				<section id='make-grid' className='w-screen h-screen'>
 					<h1 className='absolute top-5 text-xl'>Make Set</h1>
-					<MakeSet setSetElements={setSetElements} defaultValues={editSetContents} title='' />
+					<MakeSet setSetElements={setSetElements} defaultValues={editSetContents} defaultTitle={editSetTitle} />
 				</section>
 			</section>
 			<section id='questioner'>

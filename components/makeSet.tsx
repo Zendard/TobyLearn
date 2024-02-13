@@ -14,7 +14,7 @@ const FormSchema = z.object({
 	title:z.string().regex(/(\w+\s*)+/i,{message:'Only letters and numbers allowed'})
 }).catchall(z.string())
 
-export function MakeSet({setSetElements,defaultValues,title}:{setSetElements:(arg0:string[])=>void,defaultValues:{[key:string]:string},title:string}){
+export function MakeSet({setSetElements,defaultValues,defaultTitle}:{setSetElements:(arg0:string[])=>void,defaultValues:{[key:string]:string},defaultTitle:string}){
 	const form = useForm<z.infer<typeof FormSchema>>({
 		resolver: zodResolver(FormSchema)
 	})
@@ -23,7 +23,10 @@ export function MakeSet({setSetElements,defaultValues,title}:{setSetElements:(ar
 	const [fieldArray,setFieldArray]=useState([<div key={0}/>])
 
 	useEffect(()=>{
+		form.reset()
+		setFieldArray([])
 		setItemCounter(Object.keys(defaultValues).length+1)
+		form.setValue('title',defaultTitle)
 	},[defaultValues])
 
 	useEffect(()=>{
@@ -40,7 +43,7 @@ export function MakeSet({setSetElements,defaultValues,title}:{setSetElements:(ar
 						form.handleSubmit((formdata)=>saveSet(formdata,setSetElements))
 					}>
 						<FormField
-							defaultValue={title}
+							defaultValue={defaultTitle}
 							control={form.control}
 							name="title"
 							render={({ field }) => (

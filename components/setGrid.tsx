@@ -4,9 +4,11 @@ import { toast } from '@/components/ui/use-toast'
 import {LucideEdit2, LucideMoreVertical, LucideShare, LucideTrash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTrigger } from '@/components/ui/dialog'
-import {DropdownMenu,DropdownMenuContent,DropdownMenuItem,DropdownMenuLabel,DropdownMenuSeparator,DropdownMenuTrigger,} from '@/components/ui/dropdown-menu'
+import {Popover,PopoverContent,PopoverTrigger} from '@/components/ui/popover'
+import { Label } from '@/components/ui/label'
+import { Separator } from './ui/separator'
 
-export function SetGrid({setCurrentSet,setElements,setSetElements,setEditSetContent}:{setCurrentSet:(arg0: string)=>void,setElements:string[],setSetElements:(arg0: string[])=>void,setEditSetContent:(arg0:{[key:string]:string})=>void}){
+export function SetGrid({setCurrentSet,setElements,setSetElements,setEditSetContent,setEditSetTitle}:{setCurrentSet:(arg0: string)=>void,setElements:string[],setSetElements:(arg0: string[])=>void,setEditSetContent:(arg0:{[key:string]:string})=>void,setEditSetTitle:(arg0:string)=>void}){
 	
 	useEffect(()=>{
 		import('@tauri-apps/api/index').then((tauri)=>{
@@ -25,16 +27,16 @@ export function SetGrid({setCurrentSet,setElements,setSetElements,setEditSetCont
 						<Card key={'card-'+setName} className="cursor-pointer hover:bg-white/10 w-48 h-fit">
 							<CardHeader className='flex flex-row justify-between items-center'>
 								<CardTitle onClick={()=>{setCurrentSet(setName); window.location.href='#questioner'}} >{setName}</CardTitle>
-								<DropdownMenu>
-									<DropdownMenuTrigger asChild className='flex justify-end'><Button className=' hover:bg-zinc-500' variant={'ghost'}><LucideMoreVertical/></Button></DropdownMenuTrigger>
-									<DropdownMenuContent>
-										<DropdownMenuLabel>{setName}</DropdownMenuLabel>
-										<DropdownMenuItem className=' flex gap-3 text-md' onSelectCapture={()=>editSet(setName,setEditSetContent)}><LucideEdit2 strokeWidth={3} size={'1.3em'}/><a href="#make-grid">Edit</a></DropdownMenuItem>
-										<DropdownMenuItem className=' flex gap-3 text-md' onClick={()=>exportSet(setName)}><LucideShare size={'1.3em'}/>Export</DropdownMenuItem>
-										<DropdownMenuSeparator />
-										<DropdownMenuItem ><DialogTrigger  asChild><div className=' text-red-600 flex gap-3 text-md'><LucideTrash2 stroke='red' size={'1.3em'} /> Delete</div ></DialogTrigger></DropdownMenuItem>
-									</DropdownMenuContent>
-								</DropdownMenu>
+								<Popover>
+									<PopoverTrigger asChild className='flex justify-end'><Button className=' hover:bg-zinc-500' variant={'ghost'}><LucideMoreVertical/></Button></PopoverTrigger>
+									<PopoverContent className='w-full flex flex-col gap-1 justify-center'>
+										<Label className=' text-lg font-bold'>{setName}</Label>
+										<Button variant={'ghost'} className='w-full justify-start flex gap-3 text-md px-3 py-0' onClick={()=>editSet(setName,setEditSetContent,setEditSetTitle)}><a href="#make-grid" className='w-full p-0 m-0 justify-start flex gap-3 text-md'><LucideEdit2 strokeWidth={3} size={'1.3em'}/>Edit </a> </Button>
+										<Button variant={'ghost'} className='justify-start flex gap-3 text-md px-3 py-0' onClick={()=>exportSet(setName)}><LucideShare size={'1.3em'}/>Export</Button>
+										<Separator />
+										<Button variant={'ghost'} className='justify-start px-3 py-0'><DialogTrigger  asChild><div className=' text-red-600 flex gap-3 text-md'><LucideTrash2 stroke='red' size={'1.3em'} /> Delete</div ></DialogTrigger></Button>
+									</PopoverContent>
+								</Popover>
 							</CardHeader>
 							<CardContent >
 							</CardContent>
@@ -78,12 +80,11 @@ function exportSet(setName:string){
 	})
 }
 
-function editSet(setName:string,setEditSetContent:(arg0:{[key:string]:string})=>void){
+function editSet(setName:string,setEditSetContent:(arg0:{[key:string]:string})=>void,setEditSetTitle:(arg0:string)=>void){
 	import('@tauri-apps/api/index').then((tauri)=>{
 		tauri.invoke<string>('get_file_content',{fileString:setName}).then((setContent)=>{
-			// window.location.href='#make-grid'
-			console.log(window.location.href)
 			setEditSetContent(JSON.parse(setContent))
+			setEditSetTitle(setName)
 		})
 	})
 }
