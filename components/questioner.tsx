@@ -40,7 +40,13 @@ export function Questioner({currentSet,settings,setCurrentSet}:{currentSet:strin
 		<div className="questioner flex flex-col gap-5">
 			{Object.keys(fileContent).length>0 ?
 				<>
-					<h1 id="question" className="text-7xl text-center">{keyArray[questionCounter]}</h1>
+					<h1 id="question" className="text-7xl text-center" data-hide={buttonClass=='wrong'}>{keyArray[questionCounter]}</h1>
+					{settings.showAnswer && buttonClass=='wrong' && questionCounter!=0 &&
+					<h1 className='text-7xl text-center'>{fileContent[keyArray[questionCounter-1]]}</h1>
+					}
+					{settings.showAnswer && buttonClass=='wrong' && questionCounter==0 &&
+					<h1 className='text-7xl text-center'>{fileContent[keyArray[keyArray.length-1]]}</h1>
+					}
 					<Form {...form}>
 						<form className="flex gap-3 justify-between" onSubmit={
 							form.handleSubmit((data)=>checkAnswer(questionCounter,fileContent,data,form,setButtonClass,setFileContent,setQuestionCounter,keyArray,settings,setCurrentSet))
@@ -51,7 +57,7 @@ export function Questioner({currentSet,settings,setCurrentSet}:{currentSet:strin
 								render={({ field }) => (
 									<FormItem className='w-full'>
 										<FormControl>
-											<Input placeholder="Antwoord" {...field} />
+											<Input className={`${buttonClass} ${settings.showAnswer}`} placeholder='Answer' {...field} />
 										</FormControl>
 									</FormItem>
 								)}
@@ -104,7 +110,7 @@ const FormSchema = z.object({
 	answer: z.string(),
 })
 
-function checkAnswer(questionCounter:number,fileContent:{[question:string]:string},data: z.infer<typeof FormSchema>,form: UseFormReturn<{ answer: string }>,setButtonClass: Dispatch<SetStateAction<string>>,setFileContent: Dispatch<SetStateAction<{ [question:string]: string }>>,setQuestionCounter: { (value: SetStateAction<number>): void; (arg0: number): void },keyArray: (string | number)[],settings:Isettings,setCurrentSet:(arg0:string)=>void){
+function checkAnswer(questionCounter:number,fileContent:{[question:string]:string},data: z.infer<typeof FormSchema>,form: UseFormReturn<{ answer: string }>,setButtonClass: (arg0:string)=>void,setFileContent: (arg0:{[question:string]: string})=>void,setQuestionCounter: (arg0:number)=>void,keyArray: (string | number)[],settings:Isettings,setCurrentSet:(arg0:string)=>void){
 	if(data.answer == fileContent[keyArray[questionCounter]] || (!settings.caseSensitive && data.answer.toLowerCase() == fileContent[keyArray[questionCounter]].toLowerCase())){
 		const newObject=fileContent
 		delete newObject[keyArray[questionCounter]]
@@ -116,7 +122,6 @@ function checkAnswer(questionCounter:number,fileContent:{[question:string]:strin
 		setButtonClass('wrong')
 		setTimeout(()=>setButtonClass(''),1000)
 		if(questionCounter<Object.keys(fileContent).length){setQuestionCounter(questionCounter+1)}
-		
 	}
 	form.setValue('answer','')
 }

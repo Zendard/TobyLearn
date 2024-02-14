@@ -224,4 +224,22 @@
 			opacity: 0;
 		}
 	}
+
+	@keyframes showAnswer {
+		from {
+			scale: 1;
+		}
+
+		30% {
+			scale: 0;
+		}
+
+		to {
+			scale: 0;
+		}
+	}
+
+	h1[data-hide="true"] {
+		display: none;
+	}
 }
