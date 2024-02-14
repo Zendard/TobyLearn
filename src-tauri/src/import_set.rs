@@ -3,7 +3,7 @@ use std::fs;
 use tauri::api::dialog::blocking::FileDialogBuilder;
 
 #[tauri::command]
-pub fn import_set() -> Result<String, String> {
+pub async fn import_set() -> Result<String, String> {
     let proj_dirs = match get_project_dir() {
         Err(e) => return Err(e),
         Ok(data) => data,

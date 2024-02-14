@@ -3,16 +3,17 @@ use std::fs;
 use tauri::api::dialog::blocking::FileDialogBuilder;
 
 #[tauri::command]
-pub fn export_set(set_name: String) -> Result<String, String> {
-    let save_path = FileDialogBuilder::new()
+pub async fn export_set(set_name: String) -> Result<String, String> {
+    let selected_path = FileDialogBuilder::new()
         .set_title("Choose export location")
         .set_file_name(&set_name)
         .add_filter("TobyLearn Sets (.tl)", &["tl"])
         .save_file();
-    if save_path.is_none() {
-        return Ok("Cancelled export".to_string());
-    }
-    let save_path = save_path.unwrap().join(set_name.clone() + ".tl");
+    let mut save_path = match selected_path {
+        None => return Ok("Cancelled export".to_string()),
+        Some(data) => data,
+    };
+    save_path.set_extension("tl");
 
     let set_content = match get_file_content(set_name.clone()) {
         Err(e) => return Err(e),

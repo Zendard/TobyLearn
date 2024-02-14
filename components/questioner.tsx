@@ -76,7 +76,7 @@ export function Questioner({currentSet,settings,setCurrentSet}:{currentSet:strin
 function GetSet(currentSet:string, setFileContent: Dispatch<SetStateAction<{[question:string]:string}>>, setKeyArray: (arg0: string[])=>void,toast: ((arg0: { variant: 'destructive'; title: string; description: string }) => void),randomizeQuestions:boolean,setInitialLength:(arg0: number)=>void){
 	if (currentSet.length<=0) return
 	import('@tauri-apps/api/index').then((tauri)=>{
-		tauri.invoke<string>('get_file_content',{'fileString':currentSet+'.tl'}).then((fileContent)=>{
+		tauri.invoke<string>('get_file_content',{'fileString':currentSet}).then((fileContent)=>{
 			const JSONFile= JSON.parse(fileContent)
 			if(randomizeQuestions){
 				shuffleKeys(JSONFile,setKeyArray)
