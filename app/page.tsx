@@ -14,14 +14,15 @@ import { MakeSet } from '@/components/makeSet'
 export interface Isettings{
 	accentColor:string,
 	randomizeQuestions: boolean,
-	caseSensitive:boolean
+	caseSensitive:boolean,
+	showAnswer:boolean
 }
 
 export default function Home() {
 	const [setElements,setSetElements]=useState([''])
 	const {toast}=useToast()
 	const [currentSet,setCurrentSet]=useState('')
-	const [settings,setSettings]=useState<Isettings>({accentColor:'none',randomizeQuestions:true,caseSensitive:true})
+	const [settings,setSettings]=useState<Isettings>({accentColor:'none',randomizeQuestions:true,caseSensitive:true,showAnswer:true})
 	const { setTheme } = useTheme()
 	const [editSetContents,setEditSetContent]=useState<{[key:string]:string}>({'':''})
 	const [editSetTitle,setEditSetTitle]=useState('')

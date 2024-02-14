@@ -36,7 +36,8 @@ export function Settings({settings,setSettings}:{settings:Isettings,setSettings:
 	const settingsSchema = z.object({
 		accentColor: z.string().catch(settings.accentColor),
 		randomizeQuestions: z.boolean().catch(settings.randomizeQuestions),
-		caseSensitive: z.boolean().catch(settings.caseSensitive)
+		caseSensitive: z.boolean().catch(settings.caseSensitive),
+		showAnswer: z.boolean().catch(settings.caseSensitive)
 	})
 	const form = useForm<z.infer<typeof settingsSchema>>({
 		resolver: zodResolver(settingsSchema),
@@ -106,6 +107,19 @@ export function Settings({settings,setSettings}:{settings:Isettings,setSettings:
 									<FormLabel>Case sensitive?</FormLabel>
 									<FormControl className='flex items-center'>
 										<Switch checked={field.value} defaultChecked={settings.caseSensitive} onCheckedChange={field.onChange}/>
+									</FormControl>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
+						<FormField
+							control={form.control}
+							name="showAnswer"
+							render={({ field }) => (
+								<FormItem className='flex justify-between items-center'>
+									<FormLabel>Show correct answer when wrong?</FormLabel>
+									<FormControl className='flex items-center'>
+										<Switch checked={field.value} defaultChecked={settings.showAnswer} onCheckedChange={field.onChange}/>
 									</FormControl>
 									<FormMessage />
 								</FormItem>
