@@ -111,14 +111,42 @@ const FormSchema = z.object({
 })
 
 function checkAnswer(questionCounter:number,fileContent:{[question:string]:string},data: z.infer<typeof FormSchema>,form: UseFormReturn<{ answer: string }>,setButtonClass: (arg0:string)=>void,setFileContent: (arg0:{[question:string]: string})=>void,setQuestionCounter: (arg0:number)=>void,keyArray: (string | number)[],settings:Isettings,setCurrentSet:(arg0:string)=>void){
-	if(data.answer == fileContent[keyArray[questionCounter]] || (!settings.caseSensitive && data.answer.toLowerCase() == fileContent[keyArray[questionCounter]].toLowerCase())){
+	const noAccentAnswer=fileContent[keyArray[questionCounter]].normalize('NFD').replace(/\p{Diacritic}/gu, '')
+	const noAccentInput=data.answer.normalize('NFD').replace(/\p{Diacritic}/gu, '')
+	console.log(noAccentAnswer)
+	if(data.answer == fileContent[keyArray[questionCounter]]){
 		const newObject=fileContent
 		delete newObject[keyArray[questionCounter]]
 		setFileContent(newObject)
 		setButtonClass('correct')
 		setTimeout(()=>setButtonClass(''),1000)
 		if(Object.keys(fileContent).length<=0){setCurrentSet('')}
-	}else{
+	}
+	else if (!settings.caseSensitive && data.answer.toLowerCase() == fileContent[keyArray[questionCounter]].toLowerCase()){
+		const newObject=fileContent
+		delete newObject[keyArray[questionCounter]]
+		setFileContent(newObject)
+		setButtonClass('correct')
+		setTimeout(()=>setButtonClass(''),1000)
+		if(Object.keys(fileContent).length<=0){setCurrentSet('')}
+	}
+	else if (!settings.accentSensitive && noAccentInput==noAccentAnswer){
+		const newObject=fileContent
+		delete newObject[keyArray[questionCounter]]
+		setFileContent(newObject)
+		setButtonClass('correct')
+		setTimeout(()=>setButtonClass(''),1000)
+		if(Object.keys(fileContent).length<=0){setCurrentSet('')}
+	}
+	else if(!settings.accentSensitive && !settings.caseSensitive && noAccentInput.toLowerCase()==noAccentAnswer.toLowerCase()){
+		const newObject=fileContent
+		delete newObject[keyArray[questionCounter]]
+		setFileContent(newObject)
+		setButtonClass('correct')
+		setTimeout(()=>setButtonClass(''),1000)
+		if(Object.keys(fileContent).length<=0){setCurrentSet('')}
+	}
+	else{
 		setButtonClass('wrong')
 		setTimeout(()=>setButtonClass(''),1000)
 		if(questionCounter<Object.keys(fileContent).length){setQuestionCounter(questionCounter+1)}

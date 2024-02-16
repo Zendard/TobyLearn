@@ -15,6 +15,7 @@ export interface Isettings{
 	accentColor:string,
 	randomizeQuestions: boolean,
 	caseSensitive:boolean,
+	accentSensitive:boolean,
 	showAnswer:boolean
 }
 
@@ -22,7 +23,7 @@ export default function Home() {
 	const [setElements,setSetElements]=useState([''])
 	const {toast}=useToast()
 	const [currentSet,setCurrentSet]=useState('')
-	const [settings,setSettings]=useState<Isettings>({accentColor:'none',randomizeQuestions:true,caseSensitive:true,showAnswer:true})
+	const [settings,setSettings]=useState<Isettings>({accentColor:'none',randomizeQuestions:true,caseSensitive:true,accentSensitive:true,showAnswer:true})
 	const { setTheme } = useTheme()
 	const [editSetContents,setEditSetContent]=useState<{[key:string]:string}>({'':''})
 	const [editSetTitle,setEditSetTitle]=useState('')

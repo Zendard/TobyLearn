@@ -23,7 +23,6 @@ export function MakeSet({setSetElements,defaultValues,defaultTitle}:{setSetEleme
 	const [fieldArray,setFieldArray]=useState([<div key={0}/>])
 
 	useEffect(()=>{
-		form.reset()
 		setFieldArray([])
 		setItemCounter(Object.keys(defaultValues).length+1)
 		form.setValue('title',defaultTitle)
@@ -34,7 +33,7 @@ export function MakeSet({setSetElements,defaultValues,defaultTitle}:{setSetEleme
 	},[itemCounter])
 	return(
 		<>
-			<Button onClick={()=>{form.reset(); setFieldArray([])}} asChild variant='ghost' className='absolute top-4 left-4'>
+			<Button onClick={()=>{setFieldArray([])}} asChild variant='ghost' className='absolute top-4 left-4'>
 				<a href="#grid"><ArrowLeft /></a>
 			</Button>
 			<div className="form">
@@ -58,7 +57,7 @@ export function MakeSet({setSetElements,defaultValues,defaultTitle}:{setSetEleme
 						<ScrollArea className='formScroll'>
 							<div className='p-4'>{fieldArray}</div>
 						</ScrollArea>
-						<Button>Ok</Button>
+						<Button type='submit'>Ok</Button>
 					</form>
 				</Form>
 			</div>
@@ -79,7 +78,7 @@ function fieldElement(counter:number, last:boolean, setItemCounter: { (value: Se
 	return(
 		<fieldset className='flex gap-3 mt-3' key={counter}>
 			<FormField
-				defaultValue={Object.keys(defaultValues)[counter]}
+				defaultValue={Object.keys(defaultValues)[counter]||''}
 				control={form.control}
 				name={`q-${counter}`}
 				render={({ field }) => (
@@ -96,7 +95,7 @@ function fieldElement(counter:number, last:boolean, setItemCounter: { (value: Se
 				)}
 			/>
 			<FormField
-				defaultValue={defaultValues[Object.keys(defaultValues)[counter]]}
+				defaultValue={defaultValues[Object.keys(defaultValues)[counter]]||''}
 				control={form.control}
 				name={`a-${counter}`}
 				render={({ field }) => (
@@ -121,6 +120,7 @@ interface Iformdata{
 }
 
 function saveSet(formdata:Iformdata, setSetElements: ((arg0: string[]) => void)){
+	console.log('save set')
 	const title =formdata['title']
 	delete formdata[title]
 	const questions: string[] = []

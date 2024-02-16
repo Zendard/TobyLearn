@@ -37,6 +37,7 @@ export function Settings({settings,setSettings}:{settings:Isettings,setSettings:
 		accentColor: z.string().catch(settings.accentColor),
 		randomizeQuestions: z.boolean().catch(settings.randomizeQuestions),
 		caseSensitive: z.boolean().catch(settings.caseSensitive),
+		accentSensitive: z.boolean().catch(settings.accentSensitive),
 		showAnswer: z.boolean().catch(settings.caseSensitive)
 	})
 	const form = useForm<z.infer<typeof settingsSchema>>({
@@ -101,6 +102,19 @@ export function Settings({settings,setSettings}:{settings:Isettings,setSettings:
 						/>
 						<FormField
 							control={form.control}
+							name="showAnswer"
+							render={({ field }) => (
+								<FormItem className='flex justify-between items-center'>
+									<FormLabel>Show correct answer when wrong?</FormLabel>
+									<FormControl className='flex items-center'>
+										<Switch checked={field.value} defaultChecked={settings.showAnswer} onCheckedChange={field.onChange}/>
+									</FormControl>
+								</FormItem>
+							)}
+						/>
+						<Separator />
+						<FormField
+							control={form.control}
 							name="caseSensitive"
 							render={({ field }) => (
 								<FormItem className='flex justify-between items-center'>
@@ -114,18 +128,18 @@ export function Settings({settings,setSettings}:{settings:Isettings,setSettings:
 						/>
 						<FormField
 							control={form.control}
-							name="showAnswer"
+							name="accentSensitive"
 							render={({ field }) => (
 								<FormItem className='flex justify-between items-center'>
-									<FormLabel>Show correct answer when wrong?</FormLabel>
+									<FormLabel>Accent sensitive?</FormLabel>
 									<FormControl className='flex items-center'>
-										<Switch checked={field.value} defaultChecked={settings.showAnswer} onCheckedChange={field.onChange}/>
+										<Switch checked={field.value} defaultChecked={settings.accentSensitive} onCheckedChange={field.onChange}/>
 									</FormControl>
-									<FormMessage />
 								</FormItem>
 							)}
 						/>
-						<SheetClose asChild><Button type="submit">Submit</Button></SheetClose>
+						<Separator />
+						<SheetClose asChild className='mt-auto'><Button type="submit">Submit</Button></SheetClose>
 					</form>
 				</Form>
 				
