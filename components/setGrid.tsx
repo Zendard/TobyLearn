@@ -24,11 +24,11 @@ export function SetGrid({setCurrentSet,setElements,setSetElements,setEditSetCont
 			{setElements.map((setName)=>{
 				return (
 					<Dialog key={'dialog-'+setName}>
-						<Card key={'card-'+setName} className="cursor-pointer hover:bg-white/10 w-48 h-fit">
+						<Card key={'card-'+setName} className="cursor-pointer hover:bg-white/10 w-48 h-full" onClick={()=>{setCurrentSet(setName); window.location.href='#questioner'}}>
 							<CardHeader className='flex flex-row justify-between items-center'>
-								<CardTitle onClick={()=>{setCurrentSet(setName); window.location.href='#questioner'}} >{setName}</CardTitle>
+								<CardTitle >{setName}</CardTitle>
 								<Popover>
-									<PopoverTrigger asChild className='flex justify-end'><Button className=' hover:bg-zinc-500' variant={'ghost'}><LucideMoreVertical/></Button></PopoverTrigger>
+									<PopoverTrigger asChild className='flex justify-end'><Button className=' hover:bg-zinc-500' variant={'ghost'} onClick={(e)=>e.stopPropagation()}><LucideMoreVertical/></Button></PopoverTrigger>
 									<PopoverContent className='w-full flex flex-col gap-1 justify-center'>
 										<Label className=' text-lg font-bold'>{setName}</Label>
 										<Button variant={'ghost'} className='w-full justify-start flex gap-3 text-md px-3 py-0' onClick={()=>editSet(setName,setEditSetContent,setEditSetTitle)}><a href="#make-grid" className='w-full p-0 m-0 justify-start flex gap-3 text-md'><LucideEdit2 strokeWidth={3} size={'1.3em'}/>Edit </a> </Button>
