@@ -76,7 +76,7 @@ function generateFields(itemCounter:number, setItemCounter: Dispatch<SetStateAct
 
 function fieldElement(counter:number, last:boolean, setItemCounter: { (value: SetStateAction<number>): void; (value: SetStateAction<number>): void },form:UseFormReturn<z.objectOutputType<{title: z.ZodString;}, z.ZodString, 'strip'>, undefined>,defaultValues:{[key:string]:string}){
 	return(
-		<fieldset className='flex gap-3 mt-3' key={counter}>
+		<fieldset className='flex gap-3 mt-3 relative' key={counter}>
 			<FormField
 				defaultValue={Object.keys(defaultValues)[counter]||''}
 				control={form.control}
@@ -108,7 +108,7 @@ function fieldElement(counter:number, last:boolean, setItemCounter: { (value: Se
 				)}
 			/>
 			{counter!=0 && last &&
-				<Button variant={'ghost'} tabIndex={999999} onClick={()=>{setItemCounter(counter)}}><LucideX /></Button>
+				<Button className='absolute right-0 px-2' variant={'ghost'} tabIndex={999999} onClick={()=>{setItemCounter(counter)}}><LucideX /></Button>
 			}
 		</fieldset>
 	)

@@ -30,6 +30,9 @@ use crate::check_update::check_update;
 mod export_set;
 use crate::export_set::export_set;
 
+mod reverse_set;
+use crate::reverse_set::reverse_set;
+
 use std::fs;
 
 fn main() {
@@ -58,7 +61,8 @@ fn main() {
             delete_set,
             import_set,
             check_update,
-            export_set
+            export_set,
+            reverse_set
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
