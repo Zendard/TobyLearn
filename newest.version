@@ -1,2 +1,2 @@
-1.1.4
-Edit sets, Export sets, Move set options to context menu, Fix bug when canceling set export
+1.1.5
+Add option to reverse set, Add option to show correct answer when wrong, Add option to disable checking for accents, Fix Linux crash when exporting/importing sets
