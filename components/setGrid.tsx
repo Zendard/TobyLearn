@@ -31,7 +31,7 @@ export function SetGrid({setCurrentSet,setElements,setSetElements,setEditSetCont
 									<PopoverTrigger asChild className='flex justify-end'><Button className=' hover:bg-zinc-500' variant={'ghost'} onClick={(e)=>e.stopPropagation()}><LucideMoreVertical/></Button></PopoverTrigger>
 									<PopoverContent className='w-full flex flex-col gap-1 justify-center'>
 										<Label className=' text-lg font-bold'>{setName}</Label>
-										<Button variant={'ghost'} className='w-full justify-start flex gap-3 text-md px-3 py-0' onClick={()=>editSet(setName,setEditSetContent,setEditSetTitle)}><a href="#make-grid" className='w-full p-0 m-0 justify-start flex gap-3 text-md'><LucideEdit2 strokeWidth={3} size={'1.3em'}/>Edit </a> </Button>
+										<Button variant={'ghost'} className='w-full justify-start flex gap-3 text-md px-3 py-0' onClick={(e)=>{e.stopPropagation(); editSet(setName,setEditSetContent,setEditSetTitle)}}><a href="#make-grid" className='w-full p-0 m-0 justify-start flex gap-3 text-md'><LucideEdit2 strokeWidth={3} size={'1.3em'}/>Edit </a> </Button>
 										<Button variant={'ghost'} className='w-full justify-start flex gap-3 text-md px-3 py-0' onClick={(e)=>{e.stopPropagation(); reverseSet(setName)}}><LucideArrowLeftRight/>Reverse</Button>
 										<Button variant={'ghost'} className='justify-start flex gap-3 text-md px-3 py-0' onClick={(e)=>{e.stopPropagation(); exportSet(setName)}}><LucideShare size={'1.3em'}/>Export</Button>
 										<Separator />
