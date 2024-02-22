@@ -25,15 +25,16 @@ export function MakeSet({setSetElements,defaultValues,defaultTitle}:{setSetEleme
 	useEffect(()=>{
 		setFieldArray([])
 		setItemCounter(Object.keys(defaultValues).length+1)
-		form.setValue('title',defaultTitle)
 	},[defaultValues])
 
 	useEffect(()=>{
 		setFieldArray(generateFields(itemCounter,setItemCounter,form,defaultValues))
+		form.reset()
+		form.setValue('title',defaultTitle)
 	},[itemCounter])
 	return(
 		<>
-			<Button onClick={()=>{setFieldArray([])}} asChild variant='ghost' className='absolute top-4 left-4'>
+			<Button asChild variant='ghost' className='absolute top-4 left-4'>
 				<a href="#grid"><ArrowLeft /></a>
 			</Button>
 			<div className="form">
@@ -120,7 +121,6 @@ interface Iformdata{
 }
 
 function saveSet(formdata:Iformdata, setSetElements: ((arg0: string[]) => void)){
-	console.log('save set')
 	const title =formdata['title']
 	delete formdata[title]
 	const questions: string[] = []
@@ -153,7 +153,7 @@ function saveSet(formdata:Iformdata, setSetElements: ((arg0: string[]) => void))
 							setSetElements(sets)
 						})
 						.catch((e)=>toast({variant:'destructive',title:'Error!',description:e}))})
-				toast({title:'Saved set!',description:msg})
+				toast({title:'Saved set',description:msg})
 			})
 			.catch((e)=>toast({
 				variant:'destructive',title:'Error!',description:e

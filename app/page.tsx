@@ -38,10 +38,13 @@ export default function Home() {
 		setTheme(settings.accentColor)
 	},[settings])
 
-	window.addEventListener('resize',()=>{
-		const currentAnchor=window.location.href.split('/')[window.location.href.split('/').length-1].replace('#','')
-		document.getElementById(currentAnchor)?.scrollIntoView(true)
-	})
+	useEffect(()=>{
+		window.addEventListener('resize',()=>{
+			const currentAnchor=window.location.href.split('/')[window.location.href.split('/').length-1].replace('#','')
+			console.log(document.getElementById(currentAnchor))
+			document.getElementById(currentAnchor)?.scrollIntoView(true)
+		})
+	},[])
 	return (
 		<main>
 			<section id="start">

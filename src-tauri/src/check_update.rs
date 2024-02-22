@@ -21,7 +21,10 @@ pub async fn check_update() -> Result<String, String> {
     let newest_version = data[0];
     let changelog = data[1];
 
-    println!("Current: {} | Newest: {}", current_version, newest_version);
+    println!(
+        "LOG: Current: {} | Newest: {}",
+        current_version, newest_version
+    );
 
     if current_version >= newest_version.to_string() {
         return Ok("Already newest version".to_string());
@@ -68,6 +71,5 @@ async fn request(url: &str) -> String {
         .as_str()
         .unwrap()
         .to_owned();
-    println!("Data: {:?}", data);
     return data;
 }
