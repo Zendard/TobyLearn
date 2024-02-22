@@ -1,2 +1,2 @@
-1.1.5
-Add option to reverse set, Add option to show correct answer when wrong, Add option to disable checking for accents, Fix Linux crash when exporting/importing sets
+1.1.6
+Fix window view when maximizing window, Fix fields disappearing when editing sets
